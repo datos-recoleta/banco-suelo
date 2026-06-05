@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Banco de Suelo — Municipalidad de Recoleta</title>
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --ocre:          #C87941;
+  --ocre-fill:     rgba(200,121,65,0.22);
+  --ocre-line:     rgba(200,121,65,0.85);
+  --ocre-sel:      rgba(230,140,60,0.50);
+  --ocre-glow:     rgba(200,121,65,0.15);
+  --oro:           #B8860B;
+  --bg-base:       #111213;
+  --bg-panel:      #18191B;
+  --bg-card:       #1F2022;
+  --bg-hover:      rgba(255,255,255,0.04);
+  --border:        rgba(255,255,255,0.07);
+  --border-hover:  rgba(255,255,255,0.14);
+  --text-primary:  #F0ECE4;
+  --text-secondary:#8A8680;
+  --text-muted:    rgba(240,236,228,0.3);
+  --acento:        #C2A64A;
+}
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── HEADER ─────────────────────────────── */
+header {
+  height: 52px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px 0 16px;
+  flex-shrink: 0;
+}
+
+.header-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-sigla {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: var(--ocre);
+  background: rgba(200,121,65,0.1);
+  border: 1px solid rgba(200,121,65,0.25);
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
+.header-name {
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--text-primary);
+}
+
+.header-meta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  margin-top: 1px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.live-dot {
+  width: 6px; height: 6px;
+  background: #4CAF50;
+  border-radius: 50%;
+  animation: blink 3s ease-in-out infinite;
+}
+@keyframes blink {
+  0%,100%{opacity:1} 50%{opacity:.3}
+}
+
+.header-version {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+/* ── LAYOUT ──────────────────────────────── */
+.main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── SIDEBAR ─────────────────────────────── */
+.sidebar {
+  width: 288px;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.s-block {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.s-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+/* Search */
+.search-wrap { position: relative; }
+.search-input {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 7px 12px 7px 30px;
+  color: var(--text-primary);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 12px;
+  outline: none;
+  transition: border-color .15s;
+}
+.search-input:focus { border-color: rgba(200,121,65,.5); }
+.search-input::placeholder { color: var(--text-muted); }
+.search-ico {
+  position: absolute; left:9px; top:50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 13px; pointer-events: none;
+}
+
+/* Stats */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 6px;
+}
+.stat {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 8px 10px;
+}
+.stat-n {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--ocre);
+  line-height: 1;
+  margin-bottom: 3px;
+}
+.stat-l {
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: .04em;
+  line-height: 1.3;
+}
+
+/* Leyenda cartográfica */
+.leyenda-items { display: flex; flex-direction: column; gap: 7px; }
+.leyenda-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--text-secondary);
+}
+.leyenda-swatch {
+  width: 14px; height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+/* Lista inmuebles */
+.lista-header {
+  padding: 10px 16px 6px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.lista-scroll {
+  flex: 1;
+  overflow-y: auto;
+}
+.lista-scroll::-webkit-scrollbar { width: 3px; }
+.lista-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,.08); border-radius:2px; }
+
+.item {
+  padding: 9px 16px;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: all .12s;
+  border-bottom: 1px solid rgba(255,255,255,.03);
+}
+.item:hover {
+  background: var(--bg-hover);
+  border-left-color: rgba(200,121,65,.4);
+}
+.item.sel {
+  background: rgba(200,121,65,.07);
+  border-left-color: var(--ocre);
+}
+.item-id {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--acento);
+  margin-bottom: 2px;
+  letter-spacing: .04em;
+}
+.item-dir {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 1px;
+}
+.item-rol {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
+/* ── MAPA ────────────────────────────────── */
+#map {
+  flex: 1;
+  position: relative;
+}
+
+/* Controles */
+.ctrl-group {
+  position: absolute;
+  top: 14px; right: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 5;
+}
+.ctrl-btn {
+  width: 32px; height: 32px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .12s;
+  font-family: 'IBM Plex Mono', monospace;
+}
+.ctrl-btn:hover {
+  background: var(--bg-card);
+  border-color: rgba(200,121,65,.4);
+  color: var(--text-primary);
+}
+
+/* Escala cartográfica */
+.escala {
+  position: absolute;
+  bottom: 28px; right: 14px;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+  z-index: 5;
+  letter-spacing: .08em;
+}
+
+/* Norte */
+.norte {
+  position: absolute;
+  bottom: 72px; right: 22px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.norte-arrow {
+  width: 0; height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 14px solid var(--text-muted);
+}
+.norte-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: .1em;
+}
+
+/* Créditos */
+.creditos {
+  position: absolute;
+  bottom: 8px; left: 14px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+  z-index: 5;
+  letter-spacing: .06em;
+}
+
+/* ── POPUP ───────────────────────────────── */
+.mapboxgl-popup-content {
+  background: var(--bg-panel) !important;
+  border: 1px solid rgba(200,121,65,.3) !important;
+  border-radius: 6px !important;
+  padding: 0 !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,.6) !important;
+  min-width: 220px;
+}
+.mapboxgl-popup-tip {
+  border-top-color: var(--bg-panel) !important;
+  border-bottom-color: var(--bg-panel) !important;
+}
+.mapboxgl-popup-close-button {
+  color: var(--text-muted) !important;
+  font-size: 14px !important;
+  padding: 6px 8px !important;
+  right: 2px !important; top: 2px !important;
+}
+.popup-inner { padding: 14px 16px; }
+.popup-strip {
+  height: 3px;
+  background: var(--ocre);
+  border-radius: 6px 6px 0 0;
+  opacity: .7;
+}
+.popup-id {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--acento);
+  letter-spacing: .08em;
+  margin-bottom: 4px;
+}
+.popup-dir {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  line-height: 1.35;
+}
+.popup-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  gap: 12px;
+}
+.popup-row:last-child { border-bottom: none; }
+.popup-k {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  color: var(--text-muted);
+  letter-spacing: .06em;
+  white-space: nowrap;
+}
+.popup-v {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-primary);
+  text-align: right;
+}
+
+/* ── LOADING ─────────────────────────────── */
+#loading {
+  position: absolute; inset: 0;
+  background: rgba(17,18,19,.9);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 100; gap: 10px;
+}
+.spin {
+  width: 28px; height: 28px;
+  border: 2px solid rgba(200,121,65,.2);
+  border-top-color: var(--ocre);
+  border-radius: 50%;
+  animation: rot .7s linear infinite;
+}
+@keyframes rot { to { transform: rotate(360deg); } }
+.load-txt {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: .1em;
+}
+
+.mapboxgl-ctrl-logo { display:none!important; }
+.mapboxgl-ctrl-attrib { display:none!important; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-identity">
+    <div class="header-sigla">BSM</div>
+    <div>
+      <div class="header-name">Banco de Suelo Municipal</div>
+      <div class="header-meta">MUNICIPALIDAD DE RECOLETA · MUN-06101 · REGIÓN METROPOLITANA</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="live-dot"></div>
+    <div class="header-version">PROTOTIPO v0.1 · 2026</div>
+  </div>
+</header>
+
+<div class="main">
+  <div class="sidebar">
+
+    <div class="s-block">
+      <div class="s-label">Buscar inmueble</div>
+      <div class="search-wrap">
+        <span class="search-ico">⌕</span>
+        <input class="search-input" type="text" placeholder="ROL, dirección, ID..." id="searchInput">
+      </div>
+    </div>
+
+    <div class="s-block">
+      <div class="s-label">Estadísticas</div>
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-n" id="sTotal">—</div>
+          <div class="stat-l">Total<br>inmuebles</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n" id="sVisible">—</div>
+          <div class="stat-l">Visibles<br>filtro</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n" id="sArea">—</div>
+          <div class="stat-l">Polígonos<br>cargados</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="s-block">
+      <div class="s-label">Simbología cartográfica</div>
+      <div class="leyenda-items">
+        <div class="leyenda-item">
+          <div class="leyenda-swatch" style="background:rgba(200,121,65,0.55);border:1.5px solid rgba(200,121,65,0.9)"></div>
+          Suelo público municipal
+        </div>
+        <div class="leyenda-item">
+          <div class="leyenda-swatch" style="background:rgba(232,136,58,0.5);border:1.5px solid #E8883A"></div>
+          Inmueble seleccionado
+        </div>
+        <div class="leyenda-item" style="margin-top:4px;padding-top:8px;border-top:1px solid var(--border)">
+          <div class="leyenda-swatch" style="background:#1a5e20;border:1.5px solid #388E3C"></div>
+          Ref. áreas verdes (OSM)
+        </div>
+      </div>
+    </div>
+
+    <div class="lista-header">
+      <div class="s-label" style="margin:0">Catastro de inmuebles</div>
+    </div>
+    <div class="lista-scroll" id="listaScroll"></div>
+
+  </div>
+
+  <div id="map">
+    <div id="loading">
+      <div class="spin"></div>
+      <div class="load-txt">CARGANDO CATASTRO...</div>
+    </div>
+
+    <div class="ctrl-group">
+      <button class="ctrl-btn" onclick="map.zoomIn()" title="Acercar">+</button>
+      <button class="ctrl-btn" onclick="map.zoomOut()" title="Alejar">−</button>
+      <button class="ctrl-btn" onclick="resetView()" title="Extensión completa">⊡</button>
+    </div>
+
+    <div class="norte">
+      <div class="norte-arrow"></div>
+      <div class="norte-label">N</div>
+    </div>
+
+    <div class="creditos">© Municipalidad de Recoleta · datos-recoleta/banco-suelo · Mapbox · OSM</div>
+  </div>
+</div>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoicnVwYW5jbyIsImEiOiJjbXExMnE1Z2wxMWZ3MnFvZ3k3bXJ4ZzBlIn0.4fdlXb3-rGlAGzRofTaxBA';
+
+const GEOJSON = 'https://raw.githubusercontent.com/datos-recoleta/banco-suelo/refs/heads/main/cartografia/inmuebles_banco_suelo.geojson';
+
+const map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/dark-v11',
+  center: [-70.633, -33.408],
+  zoom: 13,
+  attributionControl: false
+});
+
+let features = [];
+let selId = null;
+let popup = null;
+
+map.on('load', async () => {
+  try {
+    const res = await fetch(GEOJSON);
+    const data = await res.json();
+    features = data.features;
+
+    map.addSource('bs', { type: 'geojson', data });
+
+    map.addLayer({
+      id: 'bs-fill',
+      type: 'fill',
+      source: 'bs',
+      paint: {
+        'fill-color': '#C87941',
+        'fill-opacity': 0.22
+      }
+    });
+
+    map.addLayer({
+      id: 'bs-line',
+      type: 'line',
+      source: 'bs',
+      paint: {
+        'line-color': '#C87941',
+        'line-width': 1.4,
+        'line-opacity': 0.85
+      }
+    });
+
+    map.addLayer({
+      id: 'bs-sel-fill',
+      type: 'fill',
+      source: 'bs',
+      filter: ['==', ['get', 'ID'], ''],
+      paint: {
+        'fill-color': '#E8883A',
+        'fill-opacity': 0.5
+      }
+    });
+
+    map.addLayer({
+      id: 'bs-sel-line',
+      type: 'line',
+      source: 'bs',
+      filter: ['==', ['get', 'ID'], ''],
+      paint: {
+        'line-color': '#E8883A',
+        'line-width': 2.5,
+        'line-opacity': 1
+      }
+    });
+
+    document.getElementById('sTotal').textContent = features.length;
+    document.getElementById('sVisible').textContent = features.length;
+    document.getElementById('sArea').textContent = features.length;
+
+    renderLista(features);
+    fitBounds(features);
+
+    document.getElementById('loading').style.display = 'none';
+
+    map.on('click', 'bs-fill', e => {
+      const p = e.features[0].properties;
+      selectFeature(p.ID, e.lngLat);
+    });
+
+    map.on('mouseenter', 'bs-fill', () => { map.getCanvas().style.cursor = 'pointer'; });
+    map.on('mouseleave', 'bs-fill', () => { map.getCanvas().style.cursor = ''; });
+
+  } catch(e) {
+    console.error(e);
+    document.querySelector('.load-txt').textContent = 'ERROR AL CARGAR DATOS';
+  }
+});
+
+function flatCoords(geo) {
+  const out = [];
+  const walk = a => {
+    if (!Array.isArray(a)) return;
+    if (typeof a[0] === 'number') { out.push(a); return; }
+    a.forEach(walk);
+  };
+  walk(geo.coordinates);
+  return out;
+}
+
+function centroid(geo) {
+  const c = flatCoords(geo);
+  if (!c.length) return null;
+  return [
+    c.reduce((s,p)=>s+p[0],0)/c.length,
+    c.reduce((s,p)=>s+p[1],0)/c.length
+  ];
+}
+
+function fitBounds(feats) {
+  const b = new mapboxgl.LngLatBounds();
+  feats.forEach(f => flatCoords(f.geometry).forEach(c => b.extend(c)));
+  if (!b.isEmpty()) map.fitBounds(b, { padding: 48, maxZoom: 17, duration: 800 });
+}
+
+function resetView() { fitBounds(features); }
+
+function formatDir(p) {
+  if (p.ID) {
+    const raw = p.ID.replace(/^MUN-\d+-\d+_?/, '');
+    if (raw) return raw.replace(/-/g,' ');
+  }
+  return p.ID || 'Sin dirección';
+}
+
+function selectFeature(id, lngLat) {
+  selId = id;
+  map.setFilter('bs-sel-fill', ['==', ['get', 'ID'], id]);
+  map.setFilter('bs-sel-line', ['==', ['get', 'ID'], id]);
+
+  document.querySelectorAll('.item').forEach(el =>
+    el.classList.toggle('sel', el.dataset.id === id)
+  );
+  const el = document.querySelector(`[data-id="${id}"]`);
+  if (el) el.scrollIntoView({ behavior:'smooth', block:'nearest' });
+
+  const f = features.find(f => f.properties.ID === id);
+  if (!f) return;
+  const p = f.properties;
+  const coords = lngLat || centroid(f.geometry);
+  if (popup) popup.remove();
+  popup = new mapboxgl.Popup({ offset:14, closeButton:true, closeOnClick:false })
+    .setLngLat(coords)
+    .setHTML(`
+      <div class="popup-strip"></div>
+      <div class="popup-inner">
+        <div class="popup-id">${p.ID || '—'}</div>
+        <div class="popup-dir">${formatDir(p)}</div>
+        <div class="popup-row">
+          <span class="popup-k">ROL SII</span>
+          <span class="popup-v">${p.ROL || '—'}</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-k">TIPO</span>
+          <span class="popup-v">Suelo público municipal</span>
+        </div>
+        <div class="popup-row">
+          <span class="popup-k">DATOS</span>
+          <span class="popup-v" style="color:rgba(240,236,228,.35);font-size:10px">Join Sheets pendiente</span>
+        </div>
+      </div>
+    `)
+    .addTo(map);
+}
+
+function renderLista(feats) {
+  const list = document.getElementById('listaScroll');
+  list.innerHTML = '';
+  feats.forEach(f => {
+    const p = f.properties;
+    const div = document.createElement('div');
+    div.className = 'item' + (p.ID === selId ? ' sel' : '');
+    div.dataset.id = p.ID;
+    div.innerHTML = `
+      <div class="item-id">${p.ID || '—'}</div>
+      <div class="item-dir">${formatDir(p)}</div>
+      <div class="item-rol">ROL ${p.ROL || '—'}</div>
+    `;
+    div.addEventListener('click', () => {
+      const c = centroid(f.geometry);
+      if (c) {
+        map.flyTo({ center:c, zoom:17, duration:700 });
+        setTimeout(() => selectFeature(p.ID, c), 350);
+      }
+    });
+    list.appendChild(div);
+  });
+  document.getElementById('sVisible').textContent = feats.length;
+}
+
+document.getElementById('searchInput').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase().trim();
+  const filtered = q
+    ? features.filter(f => {
+        const p = f.properties;
+        return (p.ID && p.ID.toLowerCase().includes(q)) ||
+               (p.ROL && String(p.ROL).toLowerCase().includes(q)) ||
+               formatDir(p).toLowerCase().includes(q);
+      })
+    : features;
+  renderLista(filtered);
+});
+</script>
+</body>
+</html>
