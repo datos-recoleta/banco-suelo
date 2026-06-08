@@ -769,6 +769,14 @@
         item.classList.add('activo');
         const centro = centroFeature(f);
         map.flyTo({ center: centro, zoom: 17, duration: 800 });
+        // Halo de selección
+        if (selectedId !== null) {
+          map.setFeatureState({ source: 'inmuebles', id: selectedId }, { selected: false });
+        }
+        selectedId = f.id;
+        if (selectedId !== undefined) {
+          map.setFeatureState({ source: 'inmuebles', id: selectedId }, { selected: true });
+        }
         abrirPopup(f, centro);
       });
 
@@ -809,7 +817,9 @@
     map.once('style.load', () => {
       if (geojsonData) {
         if (!map.getSource('inmuebles')) {
-          map.addSource('inmuebles', { type: 'geojson', data: geojsonData });
+          // Agregar IDs numéricos a cada feature para setFeatureState
+        geojsonData.features.forEach((f, i) => { f.id = i; });
+        map.addSource('inmuebles', { type: 'geojson', data: geojsonData, promoteId: 'id' });
         }
         if (!map.getLayer('inmuebles-fill')) {
           map.addLayer({ id: 'inmuebles-fill', type: 'fill', source: 'inmuebles', paint: { 'fill-color': '#7b2d8b', 'fill-opacity': 0.55 } });
@@ -818,7 +828,10 @@
           map.addLayer({ id: 'inmuebles-border', type: 'line', source: 'inmuebles', paint: { 'line-color': '#5a1a6b', 'line-width': 1.5 } });
         }
         if (!map.getLayer('inmuebles-hover')) {
-          map.addLayer({ id: 'inmuebles-hover', type: 'fill', source: 'inmuebles', paint: { 'fill-color': '#e8640a', 'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.6, 0] } });
+          map.addLayer({ id: 'inmuebles-hover', type: 'fill', source: 'inmuebles', paint: { 'fill-color': '#e8640a', 'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.5, 0] } });
+        }
+        if (!map.getLayer('inmuebles-selected-border')) {
+          map.addLayer({ id: 'inmuebles-selected-border', type: 'line', source: 'inmuebles', paint: { 'line-color': '#ff6600', 'line-width': ['case', ['boolean', ['feature-state', 'selected'], false], 4, 0], 'line-opacity': ['case', ['boolean', ['feature-state', 'selected'], false], 1, 0], 'line-blur': 2 } });
         }
       }
     });
@@ -834,7 +847,9 @@
       document.getElementById('badge-total').textContent = geojsonData.features.length + ' inmuebles';
 
       map.on('load', () => {
-        map.addSource('inmuebles', { type: 'geojson', data: geojsonData });
+        // Agregar IDs numéricos a cada feature para setFeatureState
+        geojsonData.features.forEach((f, i) => { f.id = i; });
+        map.addSource('inmuebles', { type: 'geojson', data: geojsonData, promoteId: 'id' });
 
         map.addLayer({
           id: 'inmuebles-fill',
@@ -856,11 +871,25 @@
           source: 'inmuebles',
           paint: {
             'fill-color': '#e8640a',
-            'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.6, 0]
+            'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.5, 0]
+          }
+        });
+
+        // Capa de halo para inmueble seleccionado
+        map.addLayer({
+          id: 'inmuebles-selected-border',
+          type: 'line',
+          source: 'inmuebles',
+          paint: {
+            'line-color': '#ff6600',
+            'line-width': ['case', ['boolean', ['feature-state', 'selected'], false], 4, 0],
+            'line-opacity': ['case', ['boolean', ['feature-state', 'selected'], false], 1, 0],
+            'line-blur': 2
           }
         });
 
         let hoveredId = null;
+        let selectedId = null;
 
         map.on('mousemove', 'inmuebles-fill', e => {
           if (e.features.length > 0) {
@@ -879,6 +908,12 @@
 
         map.on('click', 'inmuebles-fill', e => {
           const feature = e.features[0];
+          // Quitar selección anterior
+          if (selectedId !== null) {
+            map.setFeatureState({ source: 'inmuebles', id: selectedId }, { selected: false });
+          }
+          selectedId = feature.id;
+          map.setFeatureState({ source: 'inmuebles', id: selectedId }, { selected: true });
           abrirPopup(feature, e.lngLat);
           const id = feature.properties.ID;
           document.querySelectorAll('.item').forEach(i => i.classList.toggle('activo', i.dataset.id === id));
