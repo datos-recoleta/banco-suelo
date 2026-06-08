@@ -6,24 +6,27 @@
   <title>Banco de Suelo Municipal — Recoleta</title>
   <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet" />
   <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --negro: #0f0f0f;
-      --blanco: #f5f3ee;
-      --acento: #c8f04a;
-      --acento2: #4a8ff0;
-      --gris: #2a2a2a;
-      --gris2: #3d3d3d;
-      --texto-muted: #888;
+      --panel-w: 300px;
+      --azul: #1a3a5c;
+      --azul-claro: #2a5298;
+      --acento: #e8640a;
+      --verde: #2d8c4e;
+      --gris-bg: #f4f4f2;
+      --gris-borde: #ddd;
+      --texto: #1a1a1a;
+      --texto-muted: #666;
+      --blanco: #ffffff;
     }
 
     body {
-      font-family: 'DM Mono', monospace;
-      background: var(--negro);
-      color: var(--blanco);
+      font-family: 'Inter', sans-serif;
+      background: var(--gris-bg);
+      color: var(--texto);
       height: 100vh;
       display: flex;
       flex-direction: column;
@@ -32,339 +35,492 @@
 
     /* HEADER */
     header {
+      background: var(--azul);
+      color: white;
+      padding: 12px 20px;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      height: 52px;
-      background: var(--negro);
-      border-bottom: 1px solid var(--gris2);
+      gap: 16px;
       flex-shrink: 0;
       z-index: 10;
     }
 
-    .header-left {
+    .header-escudo {
+      width: 36px;
+      height: 36px;
+      background: white;
+      border-radius: 50%;
       display: flex;
       align-items: center;
-      gap: 16px;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 11px;
+      color: var(--azul);
+      flex-shrink: 0;
+      letter-spacing: -0.5px;
+    }
+
+    .header-info h1 {
+      font-size: 16px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .header-info p {
+      font-size: 11px;
+      opacity: 0.75;
+      margin-top: 1px;
+      letter-spacing: 0.03em;
     }
 
     .header-badge {
+      margin-left: auto;
       background: var(--acento);
-      color: var(--negro);
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
+      color: white;
       font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 3px 8px;
-      border-radius: 2px;
-    }
-
-    .header-title {
-      font-family: 'Syne', sans-serif;
       font-weight: 600;
-      font-size: 14px;
-      letter-spacing: 0.04em;
-      color: var(--blanco);
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
     }
 
-    .header-meta {
-      font-size: 11px;
-      color: var(--texto-muted);
-      letter-spacing: 0.06em;
-    }
-
-    #contador {
-      font-family: 'Syne', sans-serif;
-      font-size: 13px;
-      color: var(--acento);
-      font-weight: 600;
-    }
-
-    /* LAYOUT PRINCIPAL */
+    /* LAYOUT */
     .main {
       display: flex;
       flex: 1;
       overflow: hidden;
     }
 
-    /* MAPA */
-    #map {
-      flex: 1;
-      height: 100%;
-    }
-
-    /* PANEL LATERAL */
+    /* PANEL */
     .panel {
-      width: 320px;
-      background: var(--negro);
-      border-left: 1px solid var(--gris2);
+      width: var(--panel-w);
+      background: var(--blanco);
+      border-right: 1px solid var(--gris-borde);
       display: flex;
       flex-direction: column;
       overflow: hidden;
       flex-shrink: 0;
+      box-shadow: 2px 0 8px rgba(0,0,0,0.08);
     }
 
-    .panel-header {
-      padding: 16px 20px 12px;
-      border-bottom: 1px solid var(--gris2);
+    .panel-section {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--gris-borde);
     }
 
-    .panel-header h2 {
-      font-family: 'Syne', sans-serif;
-      font-size: 11px;
+    .panel-section h2 {
+      font-size: 10px;
       font-weight: 700;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--texto-muted);
       margin-bottom: 10px;
     }
 
+    /* BÚSQUEDA */
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--texto-muted);
+    }
+
     #buscar {
       width: 100%;
-      background: var(--gris);
-      border: 1px solid var(--gris2);
-      border-radius: 4px;
-      padding: 8px 12px;
-      font-family: 'DM Mono', monospace;
-      font-size: 12px;
-      color: var(--blanco);
+      padding: 9px 12px 9px 34px;
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      color: var(--texto);
+      background: var(--gris-bg);
       outline: none;
       transition: border-color 0.2s;
     }
 
-    #buscar::placeholder { color: var(--texto-muted); }
-    #buscar:focus { border-color: var(--acento); }
+    #buscar:focus { border-color: var(--azul-claro); background: white; }
+    #buscar::placeholder { color: #aaa; }
+
+    /* ESTADÍSTICAS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .stat {
+      background: var(--gris-bg);
+      border-radius: 6px;
+      padding: 8px 10px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--azul);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      color: var(--texto-muted);
+      margin-top: 2px;
+      line-height: 1.3;
+    }
+
+    /* FILTROS */
+    .filtro-select {
+      width: 100%;
+      padding: 7px 10px;
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 6px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      color: var(--texto);
+      background: white;
+      outline: none;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    .filtro-select:last-child { margin-bottom: 0; }
+    .filtro-select:focus { border-color: var(--azul-claro); }
+
+    /* SIMBOLOGÍA */
+    .simbologia-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--texto);
+      margin-bottom: 6px;
+    }
+
+    .simbologia-item:last-child { margin-bottom: 0; }
+
+    .simbolo {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
 
     /* LISTA */
+    .lista-header {
+      padding: 10px 16px 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--gris-borde);
+    }
+
+    .lista-header h2 {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--texto-muted);
+    }
+
+    #contador-lista {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--azul-claro);
+    }
+
     .lista-container {
       flex: 1;
       overflow-y: auto;
-      padding: 8px 0;
     }
 
     .lista-container::-webkit-scrollbar { width: 4px; }
-    .lista-container::-webkit-scrollbar-track { background: var(--negro); }
-    .lista-container::-webkit-scrollbar-thumb { background: var(--gris2); border-radius: 2px; }
+    .lista-container::-webkit-scrollbar-track { background: transparent; }
+    .lista-container::-webkit-scrollbar-thumb { background: var(--gris-borde); border-radius: 2px; }
 
     .item {
-      padding: 10px 20px;
+      padding: 10px 16px;
       cursor: pointer;
-      border-left: 2px solid transparent;
-      transition: all 0.15s;
+      border-left: 3px solid transparent;
+      border-bottom: 1px solid #f0f0f0;
+      transition: all 0.1s;
     }
 
-    .item:hover {
-      background: var(--gris);
-      border-left-color: var(--acento2);
-    }
-
-    .item.activo {
-      background: var(--gris);
-      border-left-color: var(--acento);
-    }
+    .item:hover { background: #f0f5ff; border-left-color: var(--azul-claro); }
+    .item.activo { background: #e8f0fe; border-left-color: var(--azul); }
 
     .item-id {
       font-size: 10px;
       color: var(--acento);
-      letter-spacing: 0.08em;
+      font-weight: 600;
+      letter-spacing: 0.06em;
       margin-bottom: 2px;
     }
 
     .item-dir {
-      font-size: 12px;
-      color: var(--blanco);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--texto);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
     .item-rol {
-      font-size: 10px;
+      font-size: 11px;
       color: var(--texto-muted);
-      margin-top: 2px;
+      margin-top: 1px;
     }
+
+    .sin-datos {
+      padding: 24px 16px;
+      text-align: center;
+      color: var(--texto-muted);
+      font-size: 13px;
+    }
+
+    /* MAPA */
+    #map { flex: 1; height: 100%; }
 
     /* POPUP */
     .mapboxgl-popup-content {
-      background: var(--negro) !important;
-      border: 1px solid var(--gris2) !important;
-      border-radius: 6px !important;
+      background: white !important;
+      border-radius: 8px !important;
       padding: 0 !important;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important;
-      min-width: 260px;
-      max-width: 300px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.18) !important;
+      min-width: 280px;
+      max-width: 320px;
+      border: 1px solid var(--gris-borde) !important;
     }
 
     .mapboxgl-popup-tip { display: none !important; }
-    .mapboxgl-popup-close-button {
-      color: var(--texto-muted) !important;
-      font-size: 18px !important;
-      padding: 6px 10px !important;
-      right: 2px !important;
-      top: 2px !important;
-    }
-    .mapboxgl-popup-close-button:hover { color: var(--blanco) !important; background: none !important; }
 
-    .popup-inner {
-      padding: 16px;
+    .mapboxgl-popup-close-button {
+      font-size: 20px !important;
+      color: var(--texto-muted) !important;
+      padding: 8px 12px !important;
+      right: 0 !important;
+      top: 0 !important;
+    }
+
+    .mapboxgl-popup-close-button:hover {
+      background: none !important;
+      color: var(--texto) !important;
+    }
+
+    .popup-cabecera {
+      background: var(--azul);
+      color: white;
+      padding: 12px 36px 12px 14px;
+      border-radius: 8px 8px 0 0;
     }
 
     .popup-id {
       font-size: 10px;
-      color: var(--acento);
-      letter-spacing: 0.1em;
-      margin-bottom: 6px;
+      opacity: 0.75;
+      letter-spacing: 0.08em;
+      margin-bottom: 3px;
     }
 
     .popup-dir {
-      font-family: 'Syne', sans-serif;
       font-size: 14px;
-      font-weight: 600;
-      color: var(--blanco);
-      margin-bottom: 12px;
+      font-weight: 700;
       line-height: 1.3;
     }
 
-    .popup-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 12px;
+    .popup-body {
+      padding: 12px 14px;
     }
 
-    .popup-campo {
-      background: var(--gris);
-      border-radius: 4px;
-      padding: 6px 8px;
+    .popup-seccion {
+      margin-bottom: 10px;
     }
 
-    .popup-campo.full {
-      grid-column: 1 / -1;
-    }
-
-    .popup-label {
+    .popup-seccion-titulo {
       font-size: 9px;
-      color: var(--texto-muted);
-      letter-spacing: 0.1em;
+      font-weight: 700;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      margin-bottom: 2px;
+      color: var(--texto-muted);
+      margin-bottom: 6px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #f0f0f0;
     }
 
-    .popup-valor {
+    .popup-fila {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+      gap: 8px;
+    }
+
+    .popup-fila-label {
       font-size: 11px;
-      color: var(--blanco);
-      font-weight: 500;
+      color: var(--texto-muted);
+      flex-shrink: 0;
+    }
+
+    .popup-fila-valor {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--texto);
+      text-align: right;
     }
 
     .popup-link {
       display: block;
       text-align: center;
-      padding: 8px;
-      background: var(--acento);
-      color: var(--negro);
-      font-family: 'Syne', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
+      padding: 9px;
+      background: var(--azul);
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
       text-decoration: none;
-      border-radius: 4px;
-      margin-top: 4px;
-      transition: opacity 0.15s;
+      border-radius: 0 0 8px 8px;
+      transition: background 0.15s;
+      letter-spacing: 0.02em;
     }
 
-    .popup-link:hover { opacity: 0.85; }
-    .popup-link-vacio {
-      display: none;
-    }
+    .popup-link:hover { background: var(--azul-claro); }
 
     /* LOADING */
     #loading {
       position: fixed;
       inset: 0;
-      background: var(--negro);
+      background: white;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 999;
-      gap: 16px;
+      gap: 14px;
     }
 
-    .loading-logo {
-      font-family: 'Syne', sans-serif;
-      font-size: 22px;
+    .loading-titulo {
+      font-size: 20px;
       font-weight: 700;
-      color: var(--blanco);
+      color: var(--azul);
     }
 
-    .loading-logo span { color: var(--acento); }
+    .loading-sub {
+      font-size: 13px;
+      color: var(--texto-muted);
+    }
 
-    .loading-bar {
-      width: 200px;
-      height: 2px;
-      background: var(--gris2);
-      border-radius: 2px;
+    .loading-barra {
+      width: 220px;
+      height: 3px;
+      background: var(--gris-borde);
+      border-radius: 3px;
       overflow: hidden;
     }
 
-    .loading-bar-inner {
+    .loading-progreso {
       height: 100%;
-      background: var(--acento);
-      border-radius: 2px;
-      animation: carga 1.8s ease-in-out infinite;
+      background: var(--azul-claro);
+      border-radius: 3px;
+      animation: progreso 1.6s ease-in-out infinite;
     }
 
-    @keyframes carga {
+    @keyframes progreso {
       0% { width: 0%; margin-left: 0%; }
-      50% { width: 60%; margin-left: 20%; }
+      50% { width: 55%; margin-left: 22%; }
       100% { width: 0%; margin-left: 100%; }
-    }
-
-    .loading-txt {
-      font-size: 11px;
-      color: var(--texto-muted);
-      letter-spacing: 0.1em;
-    }
-
-    /* ESTADO VACÍO */
-    .sin-datos {
-      padding: 32px 20px;
-      text-align: center;
-      color: var(--texto-muted);
-      font-size: 12px;
     }
   </style>
 </head>
 <body>
 
 <div id="loading">
-  <div class="loading-logo">Banco de <span>Suelo</span></div>
-  <div class="loading-bar"><div class="loading-bar-inner"></div></div>
-  <div class="loading-txt">Cargando inmuebles municipales...</div>
+  <div class="loading-titulo">Banco de Suelo Municipal</div>
+  <div class="loading-barra"><div class="loading-progreso"></div></div>
+  <div class="loading-sub">Cargando inmuebles municipales...</div>
 </div>
 
 <header>
-  <div class="header-left">
-    <div class="header-badge">Recoleta</div>
-    <div class="header-title">Banco de Suelo Municipal</div>
+  <div class="header-escudo">MR</div>
+  <div class="header-info">
+    <h1>Banco de Suelo Municipal</h1>
+    <p>Municipalidad de Recoleta · MUN-06101 · Región Metropolitana</p>
   </div>
-  <div class="header-meta">
-    <span id="contador">— inmuebles</span>
-  </div>
+  <div class="header-badge" id="badge-total">— inmuebles</div>
 </header>
 
 <div class="main">
-  <div id="map"></div>
   <div class="panel">
-    <div class="panel-header">
-      <h2>Inmuebles</h2>
-      <input type="text" id="buscar" placeholder="Buscar por ID, ROL o dirección..." />
+
+    <!-- Búsqueda -->
+    <div class="panel-section">
+      <div class="search-wrap">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="text" id="buscar" placeholder="Buscar dirección o ID..." />
+      </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="panel-section">
+      <h2>Estadísticas</h2>
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-num" id="stat-total">—</div>
+          <div class="stat-label">Total inmuebles</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num" id="stat-visibles">—</div>
+          <div class="stat-label">Visibles en filtro</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num" id="stat-comodato">—</div>
+          <div class="stat-label">En comodato</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num" id="stat-sup">—</div>
+          <div class="stat-label">m² totales</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="panel-section">
+      <h2>Filtrar por</h2>
+      <select class="filtro-select" id="filtro-comodato">
+        <option value="">Comodato: Todos</option>
+        <option value="si">Con comodato</option>
+        <option value="no">Sin comodato</option>
+      </select>
+    </div>
+
+    <!-- Simbología -->
+    <div class="panel-section">
+      <h2>Simbología cartográfica</h2>
+      <div class="simbologia-item">
+        <div class="simbolo" style="background:#2a5298;opacity:0.7;border:1.5px solid #1a3a5c"></div>
+        <span>Suelo público municipal</span>
+      </div>
+      <div class="simbologia-item">
+        <div class="simbolo" style="background:#e8640a;opacity:0.85;border:1.5px solid #c04000"></div>
+        <span>Inmueble seleccionado</span>
+      </div>
+    </div>
+
+    <!-- Lista -->
+    <div class="lista-header">
+      <h2>Catastro de inmuebles</h2>
+      <span id="contador-lista">—</span>
     </div>
     <div class="lista-container" id="lista"></div>
+
   </div>
+
+  <div id="map"></div>
 </div>
 
 <script>
@@ -375,128 +531,180 @@
 
   const map = new mapboxgl.Map({
     container: 'map',
-    style: 'mapbox://styles/mapbox/dark-v11',
+    style: 'mapbox://styles/mapbox/light-v11',
     center: [-70.6406, -33.4000],
     zoom: 13,
     attributionControl: false
   });
 
-  map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-left');
-  map.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-left');
+  map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
+  map.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-right');
 
   let datosSheets = {};
   let geojsonData = null;
-  let popupActivo = new mapboxgl.Popup({ closeButton: true, maxWidth: '320px' });
-  let itemActivo = null;
+  let popup = new mapboxgl.Popup({ closeButton: true, maxWidth: '340px', offset: 10 });
+  let featureSeleccionada = null;
+  let filtroComodato = '';
 
-  // Parse CSV simple
   function parseCSV(texto) {
     const lineas = texto.trim().split('\n');
     const headers = lineas[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
     const filas = {};
     for (let i = 1; i < lineas.length; i++) {
-      const cols = lineas[i].match(/(".*?"|[^,]+|(?<=,)(?=,)|^(?=,)|(?<=,)$)/g) || [];
+      const cols = [];
+      let actual = '';
+      let dentroComillas = false;
+      for (let c = 0; c < lineas[i].length; c++) {
+        const ch = lineas[i][c];
+        if (ch === '"') { dentroComillas = !dentroComillas; }
+        else if (ch === ',' && !dentroComillas) { cols.push(actual.trim()); actual = ''; }
+        else { actual += ch; }
+      }
+      cols.push(actual.trim());
       const fila = {};
-      headers.forEach((h, idx) => {
-        fila[h] = (cols[idx] || '').trim().replace(/^"|"$/g, '');
-      });
-      const id = fila['ID'] || fila['id'] || '';
+      headers.forEach((h, idx) => { fila[h] = (cols[idx] || '').replace(/^"|"$/g, '').trim(); });
+      const id = fila['ID'] || '';
       if (id) filas[id] = fila;
     }
     return filas;
   }
 
-  function val(fila, campo) {
+  function v(fila, ...campos) {
     if (!fila) return '—';
-    const v = fila[campo];
-    return (v && v.trim() !== '') ? v.trim() : '—';
+    for (const c of campos) {
+      const val = fila[c];
+      if (val && val.trim() !== '') return val.trim();
+    }
+    return '—';
   }
 
-  function formatPeso(v) {
-    if (!v || v === '—') return '—';
-    const n = parseInt(v.replace(/\D/g, ''));
-    if (isNaN(n)) return v;
+  function formatPeso(val) {
+    if (!val || val === '—') return '—';
+    const n = parseInt(val.replace(/\D/g, ''));
+    if (isNaN(n)) return val;
     return '$' + n.toLocaleString('es-CL');
   }
 
-  function construirPopupHTML(props, fila) {
+  function tieneComodato(fila) {
+    if (!fila) return false;
+    const c = v(fila, 'EN COMODATO A');
+    return c !== '—' && c !== '' && c.toLowerCase() !== 'no' && c.toLowerCase() !== 'sin comodato';
+  }
+
+  function construirPopup(props, fila) {
     const id = props.ID || '—';
-    const rol = props.ROL || val(fila, 'ROL SII');
-    const dir = fila ? (val(fila, 'DIRECCION') + (val(fila, 'N° DOMICILIARIO') !== '—' ? ' ' + val(fila, 'N° DOMICILIARIO') : '')) : '—';
-    const sup = val(fila, 'SUPERFICIE TERRENO m2');
-    const uso = val(fila, 'USO ACTUAL ') || val(fila, 'USO ACTUAL');
-    const estado = val(fila, 'ESTADO GENERAL INFRAESTRUCTURA');
-    const avaluo = formatPeso(val(fila, 'AVALÚO FISCAL 2DO SEMESTRE 2025') || val(fila, 'AVALUO FISCAL 2DO SEMESTRE 2025'));
-    const comodato = val(fila, 'EN COMODATO A');
-    const link = fila ? (val(fila, 'HIPERVINCULO') || val(fila, 'HIPERVÍNCULO')) : '—';
+    const rol = props.ROL || v(fila, 'ROL SII');
+    const dir = fila ? (v(fila, 'DIRECCION') + (v(fila, 'N° DOMICILIARIO') !== '—' ? ' ' + v(fila, 'N° DOMICILIARIO') : '')) : id;
+    const sup = v(fila, 'SUPERFICIE TERRENO m2');
+    const uso = v(fila, 'USO ACTUAL ', 'USO ACTUAL');
+    const estado = v(fila, 'ESTADO GENERAL INFRAESTRUCTURA');
+    const avaluo = formatPeso(v(fila, 'AVALÚO FISCAL 2DO SEMESTRE 2025', 'AVALUO FISCAL 2DO SEMESTRE 2025'));
+    const comodato = v(fila, 'EN COMODATO A');
+    const link = v(fila, 'HIPERVINCULO', 'HIPERVÍNCULO');
 
     const linkHTML = (link && link !== '—')
       ? `<a class="popup-link" href="${link}" target="_blank">Ver ficha completa →</a>`
       : '';
 
     return `
-      <div class="popup-inner">
+      <div class="popup-cabecera">
         <div class="popup-id">${id}</div>
         <div class="popup-dir">${dir}</div>
-        <div class="popup-grid">
-          <div class="popup-campo">
-            <div class="popup-label">ROL SII</div>
-            <div class="popup-valor">${rol}</div>
-          </div>
-          <div class="popup-campo">
-            <div class="popup-label">Sup. Terreno</div>
-            <div class="popup-valor">${sup !== '—' ? sup + ' m²' : '—'}</div>
-          </div>
-          <div class="popup-campo full">
-            <div class="popup-label">Uso Actual</div>
-            <div class="popup-valor">${uso}</div>
-          </div>
-          <div class="popup-campo full">
-            <div class="popup-label">Estado General</div>
-            <div class="popup-valor">${estado}</div>
-          </div>
-          <div class="popup-campo">
-            <div class="popup-label">Avalúo Fiscal</div>
-            <div class="popup-valor">${avaluo}</div>
-          </div>
-          <div class="popup-campo">
-            <div class="popup-label">En Comodato</div>
-            <div class="popup-valor">${comodato}</div>
+      </div>
+      <div class="popup-body">
+        <div class="popup-seccion">
+          <div class="popup-seccion-titulo">Identificación</div>
+          <div class="popup-fila">
+            <span class="popup-fila-label">ROL SII</span>
+            <span class="popup-fila-valor">${rol}</span>
           </div>
         </div>
-        ${linkHTML}
-      </div>`;
+        <div class="popup-seccion">
+          <div class="popup-seccion-titulo">Físico</div>
+          <div class="popup-fila">
+            <span class="popup-fila-label">Sup. Terreno</span>
+            <span class="popup-fila-valor">${sup !== '—' ? sup + ' m²' : '—'}</span>
+          </div>
+          <div class="popup-fila">
+            <span class="popup-fila-label">Estado</span>
+            <span class="popup-fila-valor">${estado}</span>
+          </div>
+        </div>
+        <div class="popup-seccion">
+          <div class="popup-seccion-titulo">Gestión</div>
+          <div class="popup-fila">
+            <span class="popup-fila-label">Uso actual</span>
+            <span class="popup-fila-valor">${uso}</span>
+          </div>
+          <div class="popup-fila">
+            <span class="popup-fila-label">Comodato a</span>
+            <span class="popup-fila-valor">${comodato}</span>
+          </div>
+        </div>
+        <div class="popup-seccion">
+          <div class="popup-seccion-titulo">Valorización</div>
+          <div class="popup-fila">
+            <span class="popup-fila-label">Avalúo fiscal 2S 2025</span>
+            <span class="popup-fila-valor">${avaluo}</span>
+          </div>
+        </div>
+      </div>
+      ${linkHTML}`;
   }
 
   function abrirPopup(feature, lngLat) {
     const props = feature.properties;
     const fila = datosSheets[props.ID] || null;
-    const html = construirPopupHTML(props, fila);
-    popupActivo.setLngLat(lngLat).setHTML(html).addTo(map);
+    popup.setLngLat(lngLat).setHTML(construirPopup(props, fila)).addTo(map);
   }
 
-  function centrarEnFeature(feature) {
-    // Calcular centro del polígono
+  function centroFeature(feature) {
     const coords = feature.geometry.coordinates[0][0];
     let lng = 0, lat = 0;
     coords.forEach(c => { lng += c[0]; lat += c[1]; });
     return [lng / coords.length, lat / coords.length];
   }
 
+  function featuresPasaFiltro(feature) {
+    const fila = datosSheets[feature.properties.ID] || null;
+    if (filtroComodato === 'si') return tieneComodato(fila);
+    if (filtroComodato === 'no') return !tieneComodato(fila);
+    return true;
+  }
+
+  function actualizarEstadisticas(features) {
+    const visibles = features.filter(f => featuresPasaFiltro(f));
+    const conComodato = visibles.filter(f => tieneComodato(datosSheets[f.properties.ID] || null));
+    let supTotal = 0;
+    visibles.forEach(f => {
+      const fila = datosSheets[f.properties.ID];
+      if (fila) {
+        const s = parseFloat(v(fila, 'SUPERFICIE TERRENO m2').replace(',', '.'));
+        if (!isNaN(s)) supTotal += s;
+      }
+    });
+    document.getElementById('stat-total').textContent = geojsonData ? geojsonData.features.length : '—';
+    document.getElementById('stat-visibles').textContent = visibles.length;
+    document.getElementById('stat-comodato').textContent = conComodato.length;
+    document.getElementById('stat-sup').textContent = supTotal > 0 ? Math.round(supTotal).toLocaleString('es-CL') : '—';
+  }
+
   function construirLista(features) {
     const lista = document.getElementById('lista');
     lista.innerHTML = '';
+    const filtrados = features.filter(f => featuresPasaFiltro(f));
+    document.getElementById('contador-lista').textContent = filtrados.length;
 
-    if (features.length === 0) {
+    if (filtrados.length === 0) {
       lista.innerHTML = '<div class="sin-datos">Sin resultados</div>';
       return;
     }
 
-    features.forEach(f => {
+    filtrados.forEach(f => {
       const props = f.properties;
       const fila = datosSheets[props.ID] || null;
       const dir = fila
-        ? (val(fila, 'DIRECCION') + (val(fila, 'N° DOMICILIARIO') !== '—' ? ' ' + val(fila, 'N° DOMICILIARIO') : ''))
+        ? (v(fila, 'DIRECCION') + (v(fila, 'N° DOMICILIARIO') !== '—' ? ' ' + v(fila, 'N° DOMICILIARIO') : ''))
         : props.ID;
 
       const item = document.createElement('div');
@@ -505,95 +713,77 @@
       item.innerHTML = `
         <div class="item-id">${props.ID}</div>
         <div class="item-dir">${dir}</div>
-        <div class="item-rol">ROL ${props.ROL || '—'}</div>
-      `;
+        <div class="item-rol">ROL ${props.ROL || '—'}</div>`;
 
       item.addEventListener('click', () => {
-        // Marcar activo
         document.querySelectorAll('.item').forEach(i => i.classList.remove('activo'));
         item.classList.add('activo');
-
-        const centro = centrarEnFeature(f);
-        map.flyTo({ center: centro, zoom: 16, duration: 800 });
+        const centro = centroFeature(f);
+        map.flyTo({ center: centro, zoom: 17, duration: 800 });
         abrirPopup(f, centro);
       });
 
       lista.appendChild(item);
     });
+
+    actualizarEstadisticas(features);
   }
 
-  function filtrarLista(query) {
+  function buscar(q) {
     if (!geojsonData) return;
-    const q = query.toLowerCase();
+    const ql = q.toLowerCase();
     const filtrados = geojsonData.features.filter(f => {
       const props = f.properties;
       const fila = datosSheets[props.ID] || {};
       const dir = (fila['DIRECCION'] || '') + ' ' + (fila['N° DOMICILIARIO'] || '');
       return (
-        (props.ID || '').toLowerCase().includes(q) ||
-        (props.ROL || '').toLowerCase().includes(q) ||
-        dir.toLowerCase().includes(q)
+        (props.ID || '').toLowerCase().includes(ql) ||
+        (props.ROL || '').toLowerCase().includes(ql) ||
+        dir.toLowerCase().includes(ql)
       );
     });
     construirLista(filtrados);
   }
 
-  document.getElementById('buscar').addEventListener('input', e => {
-    filtrarLista(e.target.value);
+  document.getElementById('buscar').addEventListener('input', e => buscar(e.target.value));
+  document.getElementById('filtro-comodato').addEventListener('change', e => {
+    filtroComodato = e.target.value;
+    construirLista(geojsonData ? geojsonData.features : []);
   });
 
   async function cargarDatos() {
     try {
-      // Cargar CSV y GeoJSON en paralelo
-      const [csvRes, geoRes] = await Promise.all([
-        fetch(CSV_URL),
-        fetch(GEOJSON_URL)
-      ]);
-
+      const [csvRes, geoRes] = await Promise.all([fetch(CSV_URL), fetch(GEOJSON_URL)]);
       const csvTexto = await csvRes.text();
       datosSheets = parseCSV(csvTexto);
       geojsonData = await geoRes.json();
 
-      document.getElementById('contador').textContent =
-        geojsonData.features.length + ' inmuebles';
+      document.getElementById('badge-total').textContent = geojsonData.features.length + ' inmuebles';
 
       map.on('load', () => {
-        map.addSource('inmuebles', {
-          type: 'geojson',
-          data: geojsonData
-        });
+        map.addSource('inmuebles', { type: 'geojson', data: geojsonData });
 
-        // Capa relleno
         map.addLayer({
           id: 'inmuebles-fill',
           type: 'fill',
           source: 'inmuebles',
-          paint: {
-            'fill-color': '#4a8ff0',
-            'fill-opacity': 0.35
-          }
+          paint: { 'fill-color': '#2a5298', 'fill-opacity': 0.45 }
         });
 
-        // Capa borde
         map.addLayer({
           id: 'inmuebles-border',
           type: 'line',
           source: 'inmuebles',
-          paint: {
-            'line-color': '#c8f04a',
-            'line-width': 1.5,
-            'line-opacity': 0.9
-          }
+          paint: { 'line-color': '#1a3a5c', 'line-width': 1.5 }
         });
 
-        // Hover highlight
         map.addLayer({
           id: 'inmuebles-hover',
           type: 'fill',
           source: 'inmuebles',
           paint: {
-            'fill-color': '#c8f04a',
-            'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.4, 0]
+            'fill-color': '#e8640a',
+            'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.6, 0]
           }
         });
 
@@ -602,9 +792,7 @@
         map.on('mousemove', 'inmuebles-fill', e => {
           if (e.features.length > 0) {
             map.getCanvas().style.cursor = 'pointer';
-            if (hoveredId !== null) {
-              map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: false });
-            }
+            if (hoveredId !== null) map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: false });
             hoveredId = e.features[0].id;
             map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: true });
           }
@@ -612,40 +800,29 @@
 
         map.on('mouseleave', 'inmuebles-fill', () => {
           map.getCanvas().style.cursor = '';
-          if (hoveredId !== null) {
-            map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: false });
-          }
+          if (hoveredId !== null) map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: false });
           hoveredId = null;
         });
 
         map.on('click', 'inmuebles-fill', e => {
           const feature = e.features[0];
-          const lngLat = e.lngLat;
-          abrirPopup(feature, lngLat);
-
-          // Marcar activo en lista
+          abrirPopup(feature, e.lngLat);
           const id = feature.properties.ID;
-          document.querySelectorAll('.item').forEach(i => {
-            i.classList.toggle('activo', i.dataset.id === id);
-          });
-          // Scroll a item
-          const itemEl = document.querySelector(`.item[data-id="${id}"]`);
-          if (itemEl) itemEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          document.querySelectorAll('.item').forEach(i => i.classList.toggle('activo', i.dataset.id === id));
+          const el = document.querySelector(`.item[data-id="${id}"]`);
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         });
 
         construirLista(geojsonData.features);
         document.getElementById('loading').style.display = 'none';
       });
 
-      // Si el mapa ya cargó
-      if (map.loaded()) {
-        map.fire('load');
-      }
+      if (map.loaded()) map.fire('load');
 
     } catch (err) {
-      console.error('Error cargando datos:', err);
+      console.error(err);
       document.getElementById('loading').innerHTML =
-        '<div style="color:#ff5555;font-family:monospace;padding:20px">Error cargando datos.<br>Revisa las URLs y el token Mapbox.</div>';
+        '<div style="color:red;padding:20px;font-family:sans-serif">Error cargando datos.<br>Revisa la consola del navegador.</div>';
     }
   }
 
@@ -653,4 +830,3 @@
 </script>
 </body>
 </html>
-
