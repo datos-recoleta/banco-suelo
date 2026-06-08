@@ -391,6 +391,55 @@
 
     .popup-link:hover { background: var(--azul-claro); }
 
+
+    /* SELECTOR MAPA BASE */
+    .mapbase-control {
+      position: absolute;
+      bottom: 32px;
+      right: 10px;
+      z-index: 5;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .mapbase-btn {
+      background: white;
+      border: 1.5px solid var(--gris-borde);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--texto-muted);
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+      min-width: 70px;
+    }
+
+    .mapbase-btn:hover { border-color: var(--azul-claro); color: var(--azul); }
+    .mapbase-btn.activo { background: var(--azul); color: white; border-color: var(--azul); }
+
+    /* GOOGLE MAPS LINK */
+    .popup-gmaps {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 8px;
+      background: #4285f4;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.15s;
+      letter-spacing: 0.02em;
+    }
+
+    .popup-gmaps:hover { background: #3367d6; }
+
     /* LOADING */
     #loading {
       position: fixed;
@@ -519,6 +568,12 @@
   </div>
 
   <div id="map"></div>
+
+  <div class="mapbase-control">
+    <button class="mapbase-btn activo" onclick="cambiarMapa('light-v11', this)">Calles</button>
+    <button class="mapbase-btn" onclick="cambiarMapa('satellite-streets-v12', this)">Satélite</button>
+    <button class="mapbase-btn" onclick="cambiarMapa('dark-v11', this)">Oscuro</button>
+  </div>
 </div>
 
 <script>
@@ -585,20 +640,20 @@
 
   function tieneComodato(fila) {
     if (!fila) return false;
-    const c = v(fila, 'EN COMODATO A');
+    const c = v(fila, 'COMODATO_A');
     return c !== '—' && c !== '' && c.toLowerCase() !== 'no' && c.toLowerCase() !== 'sin comodato';
   }
 
-  function construirPopup(props, fila) {
+  function construirPopup(props, fila, lngLat) {
     const id = props.ID || '—';
     const rol = props.ROL || v(fila, 'ROL SII');
-    const dir = fila ? (v(fila, 'DIRECCION') + (v(fila, 'N° DOMICILIARIO') !== '—' ? ' ' + v(fila, 'N° DOMICILIARIO') : '')) : id;
-    const sup = v(fila, 'SUPERFICIE TERRENO m2');
-    const uso = v(fila, 'USO ACTUAL ', 'USO ACTUAL');
-    const estado = v(fila, 'ESTADO GENERAL INFRAESTRUCTURA');
-    const avaluo = formatPeso(v(fila, 'AVALÚO FISCAL 2DO SEMESTRE 2025', 'AVALUO FISCAL 2DO SEMESTRE 2025'));
-    const comodato = v(fila, 'EN COMODATO A');
-    const link = v(fila, 'HIPERVINCULO', 'HIPERVÍNCULO');
+    const dir = fila ? (v(fila, 'DIRECCION') + (v(fila, 'NUM_DOMICILIARIO') !== '—' ? ' ' + v(fila, 'NUM_DOMICILIARIO') : '')) : id;
+    const sup = v(fila, 'SUP_TERRENO');
+    const uso = v(fila, 'USO_ACTUAL');
+    const estado = v(fila, 'ESTADO');
+    const avaluo = formatPeso(v(fila, 'AVALUO_FISCAL_2025_2'));
+    const comodato = v(fila, 'COMODATO_A');
+    const link = v(fila, 'HIPERVINCULO');
 
     const linkHTML = (link && link !== '—')
       ? `<a class="popup-link" href="${link}" target="_blank">Ver ficha completa →</a>`
@@ -647,13 +702,14 @@
           </div>
         </div>
       </div>
-      ${linkHTML}`;
+      ${linkHTML}
+        <a class="popup-gmaps" href="https://www.google.com/maps?q=${lngLat ? lngLat[1] + ',' + lngLat[0] : ''}" target="_blank">&#128205; Ver en Google Maps / Street View</a>`;
   }
 
   function abrirPopup(feature, lngLat) {
     const props = feature.properties;
     const fila = datosSheets[props.ID] || null;
-    popup.setLngLat(lngLat).setHTML(construirPopup(props, fila)).addTo(map);
+    popup.setLngLat(lngLat).setHTML(construirPopup(props, fila, [lngLat.lng, lngLat.lat])).addTo(map);
   }
 
   function centroFeature(feature) {
@@ -677,7 +733,7 @@
     visibles.forEach(f => {
       const fila = datosSheets[f.properties.ID];
       if (fila) {
-        const s = parseFloat(v(fila, 'SUPERFICIE TERRENO m2').replace(',', '.'));
+        const s = parseFloat(v(fila, 'SUP_TERRENO').replace(',', '.'));
         if (!isNaN(s)) supTotal += s;
       }
     });
@@ -702,7 +758,7 @@
       const props = f.properties;
       const fila = datosSheets[props.ID] || null;
       const dir = fila
-        ? (v(fila, 'DIRECCION') + (v(fila, 'N° DOMICILIARIO') !== '—' ? ' ' + v(fila, 'N° DOMICILIARIO') : ''))
+        ? (v(fila, 'DIRECCION') + (v(fila, 'NUM_DOMICILIARIO') !== '—' ? ' ' + v(fila, 'NUM_DOMICILIARIO') : ''))
         : props.ID;
 
       const item = document.createElement('div');
@@ -733,7 +789,7 @@
     const filtrados = geojsonData.features.filter(f => {
       const props = f.properties;
       const fila = datosSheets[props.ID] || {};
-      const dir = (fila['DIRECCION'] || '') + ' ' + (fila['N° DOMICILIARIO'] || '');
+      const dir = (fila['DIRECCION'] || '') + ' ' + (fila['NUM_DOMICILIARIO'] || '');
       return (
         (props.ID || '').toLowerCase().includes(ql) ||
         (props.ROL || '').toLowerCase().includes(ql) ||
@@ -748,6 +804,30 @@
     filtroComodato = e.target.value;
     construirLista(geojsonData ? geojsonData.features : []);
   });
+
+
+  function cambiarMapa(estilo, btn) {
+    map.setStyle('mapbox://styles/mapbox/' + estilo);
+    document.querySelectorAll('.mapbase-btn').forEach(b => b.classList.remove('activo'));
+    btn.classList.add('activo');
+    // Re-agregar capas al cambiar estilo
+    map.once('style.load', () => {
+      if (geojsonData) {
+        if (!map.getSource('inmuebles')) {
+          map.addSource('inmuebles', { type: 'geojson', data: geojsonData });
+        }
+        if (!map.getLayer('inmuebles-fill')) {
+          map.addLayer({ id: 'inmuebles-fill', type: 'fill', source: 'inmuebles', paint: { 'fill-color': '#7b2d8b', 'fill-opacity': 0.55 } });
+        }
+        if (!map.getLayer('inmuebles-border')) {
+          map.addLayer({ id: 'inmuebles-border', type: 'line', source: 'inmuebles', paint: { 'line-color': '#5a1a6b', 'line-width': 1.5 } });
+        }
+        if (!map.getLayer('inmuebles-hover')) {
+          map.addLayer({ id: 'inmuebles-hover', type: 'fill', source: 'inmuebles', paint: { 'fill-color': '#e8640a', 'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.6, 0] } });
+        }
+      }
+    });
+  }
 
   async function cargarDatos() {
     try {
@@ -828,4 +908,3 @@
 </script>
 </body>
 </html>
-
