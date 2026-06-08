@@ -191,54 +191,55 @@ let filtroCom = '';
 // ── CSV parser robusto ──
 function parseCSV(txt) {
   // Eliminar BOM
-  txt = txt.replace(/^\uFEFF/, '');
-  const headers = [];
-  const out = {};
-  let i = 0, n = txt.length;
-
-  function parseField() {
-    if (i >= n) return '';
-    if (txt[i] === '"') {
-      i++; // skip opening quote
-      let val = '';
-      while (i < n) {
-        if (txt[i] === '"') {
-          if (txt[i+1] === '"') { val += '"'; i += 2; } // escaped quote
-          else { i++; break; } // closing quote
-        } else { val += txt[i++]; }
+  txt = txt.replace(/^﻿/, '');
+  
+  // Parser robusto: reconstruir filas respetando comillas con saltos de línea
+  const filas = [];
+  let fila = [];
+  let campo = '';
+  let enComillas = false;
+  
+  for (let i = 0; i < txt.length; i++) {
+    const c = txt[i];
+    const sig = txt[i + 1];
+    
+    if (c === '"') {
+      if (enComillas && sig === '"') {
+        campo += '"'; i++; // comilla escapada
+      } else {
+        enComillas = !enComillas;
       }
-      return val.trim();
+    } else if (c === ',' && !enComillas) {
+      fila.push(campo.trim());
+      campo = '';
+    } else if ((c === '\n' || (c === '\r' && sig === '\n')) && !enComillas) {
+      if (c === '\r') i++;
+      fila.push(campo.trim());
+      campo = '';
+      if (fila.some(f => f !== '')) filas.push(fila);
+      fila = [];
+    } else if (c === '\r' && !enComillas) {
+      // ignorar CR suelto
     } else {
-      let val = '';
-      while (i < n && txt[i] !== ',' && txt[i] !== '\n' && txt[i] !== '\r') { val += txt[i++]; }
-      return val.trim();
+      campo += c;
     }
   }
-
-  function parseRow() {
-    const cols = [];
-    while (i < n && txt[i] !== '\n' && txt[i] !== '\r') {
-      cols.push(parseField());
-      if (i < n && txt[i] === ',') i++;
-    }
-    // skip \r\n or \n
-    if (i < n && txt[i] === '\r') i++;
-    if (i < n && txt[i] === '\n') i++;
-    return cols;
+  // última fila
+  if (campo || fila.length) {
+    fila.push(campo.trim());
+    if (fila.some(f => f !== '')) filas.push(fila);
   }
-
-  // Parse headers
-  const hRow = parseRow();
-  hRow.forEach(h => headers.push(h));
-
-  // Parse data rows
-  while (i < n) {
-    if (txt[i] === '\r' || txt[i] === '\n') { i++; continue; }
-    const cols = parseRow();
-    const fila = {};
-    headers.forEach((h, idx) => { fila[h] = (cols[idx] || '').trim(); });
-    const id = fila['ID'] || '';
-    if (id) out[id] = fila;
+  
+  if (filas.length === 0) return {};
+  
+  const headers = filas[0];
+  const out = {};
+  for (let i = 1; i < filas.length; i++) {
+    const row = filas[i];
+    const obj = {};
+    headers.forEach((h, idx) => { obj[h] = (row[idx] || '').trim(); });
+    const id = obj['ID'] || '';
+    if (id) out[id] = obj;
   }
   return out;
 }
@@ -481,4 +482,3 @@ cargar();
 </script>
 </body>
 </html>
-
