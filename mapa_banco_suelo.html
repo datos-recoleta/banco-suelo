@@ -190,33 +190,57 @@ let filtroCom = '';
 
 // ── CSV parser robusto ──
 function parseCSV(txt) {
-  // Eliminar BOM y espacios al inicio
-  txt = txt.replace(/^\uFEFF/, '').trim();
-  const rows = txt.split(/\r?\n/);
-  const headers = splitCSVRow(rows[0]).map(h => h.trim());
+  // Eliminar BOM
+  txt = txt.replace(/^\uFEFF/, '');
+  const headers = [];
   const out = {};
-  for (let i = 1; i < rows.length; i++) {
-    if (!rows[i].trim()) continue;
-    const cols = splitCSVRow(rows[i]);
+  let i = 0, n = txt.length;
+
+  function parseField() {
+    if (i >= n) return '';
+    if (txt[i] === '"') {
+      i++; // skip opening quote
+      let val = '';
+      while (i < n) {
+        if (txt[i] === '"') {
+          if (txt[i+1] === '"') { val += '"'; i += 2; } // escaped quote
+          else { i++; break; } // closing quote
+        } else { val += txt[i++]; }
+      }
+      return val.trim();
+    } else {
+      let val = '';
+      while (i < n && txt[i] !== ',' && txt[i] !== '\n' && txt[i] !== '\r') { val += txt[i++]; }
+      return val.trim();
+    }
+  }
+
+  function parseRow() {
+    const cols = [];
+    while (i < n && txt[i] !== '\n' && txt[i] !== '\r') {
+      cols.push(parseField());
+      if (i < n && txt[i] === ',') i++;
+    }
+    // skip \r\n or \n
+    if (i < n && txt[i] === '\r') i++;
+    if (i < n && txt[i] === '\n') i++;
+    return cols;
+  }
+
+  // Parse headers
+  const hRow = parseRow();
+  hRow.forEach(h => headers.push(h));
+
+  // Parse data rows
+  while (i < n) {
+    if (txt[i] === '\r' || txt[i] === '\n') { i++; continue; }
+    const cols = parseRow();
     const fila = {};
     headers.forEach((h, idx) => { fila[h] = (cols[idx] || '').trim(); });
     const id = fila['ID'] || '';
     if (id) out[id] = fila;
   }
   return out;
-}
-
-function splitCSVRow(row) {
-  const cols = [];
-  let cur = '', inQ = false;
-  for (let i = 0; i < row.length; i++) {
-    const c = row[i];
-    if (c === '"') { inQ = !inQ; }
-    else if (c === ',' && !inQ) { cols.push(cur); cur = ''; }
-    else { cur += c; }
-  }
-  cols.push(cur);
-  return cols;
 }
 
 function g(fila, ...campos) {
@@ -457,3 +481,4 @@ cargar();
 </script>
 </body>
 </html>
+
