@@ -1,436 +1,655 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Banco de Suelo — Municipalidad de Recoleta</title>
-<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
-<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-* { margin:0; padding:0; box-sizing:border-box; }
-:root {
-  --ocre:        #C87941;
-  --ocre-sel:    #E8883A;
-  --bg-base:     #111213;
-  --bg-panel:    #18191B;
-  --bg-card:     #1F2022;
-  --bg-hover:    rgba(255,255,255,0.04);
-  --border:      rgba(255,255,255,0.07);
-  --text-pri:    #F0ECE4;
-  --text-sec:    #8A8680;
-  --text-muted:  rgba(240,236,228,0.3);
-  --acento:      #C2A64A;
-}
-body { font-family:'IBM Plex Sans',sans-serif; background:var(--bg-base); color:var(--text-pri); height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Banco de Suelo Municipal — Recoleta</title>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* HEADER */
-header { height:52px; background:var(--bg-panel); border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; padding:0 20px 0 16px; flex-shrink:0; }
-.h-id { display:flex; align-items:center; gap:12px; }
-.h-sigla { font-family:'IBM Plex Mono',monospace; font-size:11px; font-weight:500; letter-spacing:.14em; color:var(--ocre); background:rgba(200,121,65,.1); border:1px solid rgba(200,121,65,.25); padding:3px 8px; border-radius:3px; }
-.h-name { font-size:13px; font-weight:500; letter-spacing:.04em; }
-.h-meta { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-muted); letter-spacing:.06em; margin-top:1px; }
-.h-right { display:flex; align-items:center; gap:16px; }
-.live { width:6px; height:6px; background:#4CAF50; border-radius:50%; animation:blink 3s ease-in-out infinite; }
-@keyframes blink { 0%,100%{opacity:1}50%{opacity:.3} }
-.h-ver { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-muted); letter-spacing:.08em; }
+    :root {
+      --negro: #0f0f0f;
+      --blanco: #f5f3ee;
+      --acento: #c8f04a;
+      --acento2: #4a8ff0;
+      --gris: #2a2a2a;
+      --gris2: #3d3d3d;
+      --texto-muted: #888;
+    }
 
-/* LAYOUT */
-.main { display:flex; flex:1; overflow:hidden; }
+    body {
+      font-family: 'DM Mono', monospace;
+      background: var(--negro);
+      color: var(--blanco);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
 
-/* SIDEBAR */
-.sidebar { width:288px; background:var(--bg-panel); border-right:1px solid var(--border); display:flex; flex-direction:column; overflow:hidden; flex-shrink:0; }
-.s-block { padding:14px 16px; border-bottom:1px solid var(--border); }
-.s-label { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--text-muted); margin-bottom:10px; }
+    /* HEADER */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      height: 52px;
+      background: var(--negro);
+      border-bottom: 1px solid var(--gris2);
+      flex-shrink: 0;
+      z-index: 10;
+    }
 
-/* SEARCH */
-.sw { position:relative; }
-.si { width:100%; background:var(--bg-card); border:1px solid var(--border); border-radius:5px; padding:7px 12px 7px 30px; color:var(--text-pri); font-family:'IBM Plex Sans',sans-serif; font-size:12px; outline:none; transition:border-color .15s; }
-.si:focus { border-color:rgba(200,121,65,.5); }
-.si::placeholder { color:var(--text-muted); }
-.sico { position:absolute; left:9px; top:50%; transform:translateY(-50%); color:var(--text-muted); font-size:13px; pointer-events:none; }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
 
-/* STATS */
-.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; }
-.stat { background:var(--bg-card); border:1px solid var(--border); border-radius:5px; padding:8px 10px; }
-.stat-n { font-family:'IBM Plex Mono',monospace; font-size:18px; font-weight:500; color:var(--ocre); line-height:1; margin-bottom:3px; }
-.stat-l { font-size:9px; color:var(--text-muted); letter-spacing:.04em; line-height:1.3; }
+    .header-badge {
+      background: var(--acento);
+      color: var(--negro);
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border-radius: 2px;
+    }
 
-/* LEYENDA */
-.ley { display:flex; flex-direction:column; gap:7px; }
-.ley-i { display:flex; align-items:center; gap:8px; font-size:11px; color:var(--text-sec); }
-.ley-sw { width:14px; height:10px; border-radius:2px; flex-shrink:0; }
+    .header-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      color: var(--blanco);
+    }
 
-/* LISTA */
-.l-hdr { padding:10px 16px 6px; border-bottom:1px solid var(--border); flex-shrink:0; }
-.l-scroll { flex:1; overflow-y:auto; }
-.l-scroll::-webkit-scrollbar { width:3px; }
-.l-scroll::-webkit-scrollbar-thumb { background:rgba(255,255,255,.08); border-radius:2px; }
-.item { padding:9px 16px; cursor:pointer; border-left:2px solid transparent; transition:all .12s; border-bottom:1px solid rgba(255,255,255,.03); }
-.item:hover { background:var(--bg-hover); border-left-color:rgba(200,121,65,.4); }
-.item.sel { background:rgba(200,121,65,.07); border-left-color:var(--ocre); }
-.item-id { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--acento); margin-bottom:2px; letter-spacing:.04em; }
-.item-dir { font-size:11px; font-weight:500; color:var(--text-pri); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-bottom:1px; }
-.item-rol { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--text-muted); }
+    .header-meta {
+      font-size: 11px;
+      color: var(--texto-muted);
+      letter-spacing: 0.06em;
+    }
 
-/* MAPA */
-#map { flex:1; position:relative; }
+    #contador {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      color: var(--acento);
+      font-weight: 600;
+    }
 
-/* CONTROLES */
-.ctrl { position:absolute; top:14px; right:14px; display:flex; flex-direction:column; gap:4px; z-index:5; }
-.cb { width:32px; height:32px; background:var(--bg-panel); border:1px solid var(--border); color:var(--text-sec); border-radius:4px; cursor:pointer; font-size:15px; display:flex; align-items:center; justify-content:center; transition:all .12s; font-family:'IBM Plex Mono',monospace; }
-.cb:hover { background:var(--bg-card); border-color:rgba(200,121,65,.4); color:var(--text-pri); }
+    /* LAYOUT PRINCIPAL */
+    .main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
 
-/* NORTE */
-.norte { position:absolute; bottom:72px; right:22px; z-index:5; display:flex; flex-direction:column; align-items:center; gap:2px; }
-.norte-a { width:0; height:0; border-left:5px solid transparent; border-right:5px solid transparent; border-bottom:14px solid var(--text-muted); }
-.norte-l { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--text-muted); letter-spacing:.1em; }
+    /* MAPA */
+    #map {
+      flex: 1;
+      height: 100%;
+    }
 
-/* CREDITOS */
-.creds { position:absolute; bottom:8px; left:14px; font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--text-muted); z-index:5; letter-spacing:.06em; }
+    /* PANEL LATERAL */
+    .panel {
+      width: 320px;
+      background: var(--negro);
+      border-left: 1px solid var(--gris2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
 
-/* POPUP */
-.mapboxgl-popup-content { background:var(--bg-panel)!important; border:1px solid rgba(200,121,65,.3)!important; border-radius:6px!important; padding:0!important; box-shadow:0 12px 40px rgba(0,0,0,.6)!important; min-width:240px; max-width:300px; }
-.mapboxgl-popup-tip { border-top-color:var(--bg-panel)!important; border-bottom-color:var(--bg-panel)!important; }
-.mapboxgl-popup-close-button { color:var(--text-muted)!important; font-size:14px!important; padding:6px 8px!important; right:2px!important; top:2px!important; }
-.p-strip { height:3px; background:var(--ocre); border-radius:6px 6px 0 0; opacity:.8; }
-.p-inner { padding:14px 16px; }
-.p-id { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--acento); letter-spacing:.08em; margin-bottom:4px; }
-.p-dir { font-size:13px; font-weight:600; color:var(--text-pri); margin-bottom:10px; line-height:1.35; }
-.p-row { display:flex; justify-content:space-between; align-items:flex-start; padding:4px 0; border-bottom:1px solid rgba(255,255,255,.05); gap:12px; }
-.p-row:last-child { border-bottom:none; }
-.p-k { font-family:'IBM Plex Mono',monospace; font-size:9px; color:var(--text-muted); letter-spacing:.06em; white-space:nowrap; padding-top:1px; }
-.p-v { font-size:11px; font-weight:500; color:var(--text-pri); text-align:right; line-height:1.3; }
-.p-v.na { color:var(--text-muted); font-weight:400; }
-.p-sep { margin:8px 0 6px; border-bottom:1px solid rgba(255,255,255,.08); }
-.p-sec { font-family:'IBM Plex Mono',monospace; font-size:9px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); margin-bottom:6px; margin-top:2px; }
+    .panel-header {
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid var(--gris2);
+    }
 
-/* LOADING */
-#loading { position:absolute; inset:0; background:rgba(17,18,19,.9); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:100; gap:10px; }
-.spin { width:28px; height:28px; border:2px solid rgba(200,121,65,.2); border-top-color:var(--ocre); border-radius:50%; animation:rot .7s linear infinite; }
-@keyframes rot { to{transform:rotate(360deg)} }
-.load-t { font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--text-muted); letter-spacing:.1em; }
-.load-s { font-family:'IBM Plex Mono',monospace; font-size:9px; color:rgba(200,121,65,.5); letter-spacing:.08em; }
+    .panel-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--texto-muted);
+      margin-bottom: 10px;
+    }
 
-.mapboxgl-ctrl-logo { display:none!important; }
-.mapboxgl-ctrl-attrib { display:none!important; }
-</style>
+    #buscar {
+      width: 100%;
+      background: var(--gris);
+      border: 1px solid var(--gris2);
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      color: var(--blanco);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    #buscar::placeholder { color: var(--texto-muted); }
+    #buscar:focus { border-color: var(--acento); }
+
+    /* LISTA */
+    .lista-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px 0;
+    }
+
+    .lista-container::-webkit-scrollbar { width: 4px; }
+    .lista-container::-webkit-scrollbar-track { background: var(--negro); }
+    .lista-container::-webkit-scrollbar-thumb { background: var(--gris2); border-radius: 2px; }
+
+    .item {
+      padding: 10px 20px;
+      cursor: pointer;
+      border-left: 2px solid transparent;
+      transition: all 0.15s;
+    }
+
+    .item:hover {
+      background: var(--gris);
+      border-left-color: var(--acento2);
+    }
+
+    .item.activo {
+      background: var(--gris);
+      border-left-color: var(--acento);
+    }
+
+    .item-id {
+      font-size: 10px;
+      color: var(--acento);
+      letter-spacing: 0.08em;
+      margin-bottom: 2px;
+    }
+
+    .item-dir {
+      font-size: 12px;
+      color: var(--blanco);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .item-rol {
+      font-size: 10px;
+      color: var(--texto-muted);
+      margin-top: 2px;
+    }
+
+    /* POPUP */
+    .mapboxgl-popup-content {
+      background: var(--negro) !important;
+      border: 1px solid var(--gris2) !important;
+      border-radius: 6px !important;
+      padding: 0 !important;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6) !important;
+      min-width: 260px;
+      max-width: 300px;
+    }
+
+    .mapboxgl-popup-tip { display: none !important; }
+    .mapboxgl-popup-close-button {
+      color: var(--texto-muted) !important;
+      font-size: 18px !important;
+      padding: 6px 10px !important;
+      right: 2px !important;
+      top: 2px !important;
+    }
+    .mapboxgl-popup-close-button:hover { color: var(--blanco) !important; background: none !important; }
+
+    .popup-inner {
+      padding: 16px;
+    }
+
+    .popup-id {
+      font-size: 10px;
+      color: var(--acento);
+      letter-spacing: 0.1em;
+      margin-bottom: 6px;
+    }
+
+    .popup-dir {
+      font-family: 'Syne', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--blanco);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    .popup-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .popup-campo {
+      background: var(--gris);
+      border-radius: 4px;
+      padding: 6px 8px;
+    }
+
+    .popup-campo.full {
+      grid-column: 1 / -1;
+    }
+
+    .popup-label {
+      font-size: 9px;
+      color: var(--texto-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .popup-valor {
+      font-size: 11px;
+      color: var(--blanco);
+      font-weight: 500;
+    }
+
+    .popup-link {
+      display: block;
+      text-align: center;
+      padding: 8px;
+      background: var(--acento);
+      color: var(--negro);
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 4px;
+      margin-top: 4px;
+      transition: opacity 0.15s;
+    }
+
+    .popup-link:hover { opacity: 0.85; }
+    .popup-link-vacio {
+      display: none;
+    }
+
+    /* LOADING */
+    #loading {
+      position: fixed;
+      inset: 0;
+      background: var(--negro);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      gap: 16px;
+    }
+
+    .loading-logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--blanco);
+    }
+
+    .loading-logo span { color: var(--acento); }
+
+    .loading-bar {
+      width: 200px;
+      height: 2px;
+      background: var(--gris2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .loading-bar-inner {
+      height: 100%;
+      background: var(--acento);
+      border-radius: 2px;
+      animation: carga 1.8s ease-in-out infinite;
+    }
+
+    @keyframes carga {
+      0% { width: 0%; margin-left: 0%; }
+      50% { width: 60%; margin-left: 20%; }
+      100% { width: 0%; margin-left: 100%; }
+    }
+
+    .loading-txt {
+      font-size: 11px;
+      color: var(--texto-muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* ESTADO VACÍO */
+    .sin-datos {
+      padding: 32px 20px;
+      text-align: center;
+      color: var(--texto-muted);
+      font-size: 12px;
+    }
+  </style>
 </head>
 <body>
 
+<div id="loading">
+  <div class="loading-logo">Banco de <span>Suelo</span></div>
+  <div class="loading-bar"><div class="loading-bar-inner"></div></div>
+  <div class="loading-txt">Cargando inmuebles municipales...</div>
+</div>
+
 <header>
-  <div class="h-id">
-    <div class="h-sigla">BSM</div>
-    <div>
-      <div class="h-name">Banco de Suelo Municipal</div>
-      <div class="h-meta">MUNICIPALIDAD DE RECOLETA · MUN-06101 · REGIÓN METROPOLITANA</div>
-    </div>
+  <div class="header-left">
+    <div class="header-badge">Recoleta</div>
+    <div class="header-title">Banco de Suelo Municipal</div>
   </div>
-  <div class="h-right">
-    <div class="live"></div>
-    <div class="h-ver">PROTOTIPO v0.2 · 2026</div>
+  <div class="header-meta">
+    <span id="contador">— inmuebles</span>
   </div>
 </header>
 
 <div class="main">
-  <div class="sidebar">
-    <div class="s-block">
-      <div class="s-label">Buscar inmueble</div>
-      <div class="sw">
-        <span class="sico">⌕</span>
-        <input class="si" type="text" placeholder="ROL, dirección, ID..." id="searchInput">
-      </div>
+  <div id="map"></div>
+  <div class="panel">
+    <div class="panel-header">
+      <h2>Inmuebles</h2>
+      <input type="text" id="buscar" placeholder="Buscar por ID, ROL o dirección..." />
     </div>
-
-    <div class="s-block">
-      <div class="s-label">Estadísticas</div>
-      <div class="stats">
-        <div class="stat"><div class="stat-n" id="sTotal">—</div><div class="stat-l">Total<br>inmuebles</div></div>
-        <div class="stat"><div class="stat-n" id="sVisible">—</div><div class="stat-l">Visibles<br>filtro</div></div>
-        <div class="stat"><div class="stat-n" id="sComodato">—</div><div class="stat-l">En<br>comodato</div></div>
-      </div>
-    </div>
-
-    <div class="s-block">
-      <div class="s-label">Simbología cartográfica</div>
-      <div class="ley">
-        <div class="ley-i"><div class="ley-sw" style="background:rgba(200,121,65,0.55);border:1.5px solid rgba(200,121,65,0.9)"></div>Suelo público municipal</div>
-        <div class="ley-i"><div class="ley-sw" style="background:rgba(232,136,58,0.5);border:1.5px solid #E8883A"></div>Inmueble seleccionado</div>
-        <div class="ley-i" style="margin-top:4px;padding-top:8px;border-top:1px solid var(--border)"><div class="ley-sw" style="background:#1a5e20;border:1.5px solid #388E3C"></div>Ref. áreas verdes (OSM)</div>
-      </div>
-    </div>
-
-    <div class="l-hdr"><div class="s-label" style="margin:0">Catastro de inmuebles</div></div>
-    <div class="l-scroll" id="listaScroll"></div>
-  </div>
-
-  <div id="map">
-    <div id="loading">
-      <div class="spin"></div>
-      <div class="load-t">CARGANDO CATASTRO...</div>
-      <div class="load-s" id="loadStatus">Leyendo geometrías...</div>
-    </div>
-    <div class="ctrl">
-      <button class="cb" onclick="map.zoomIn()" title="Acercar">+</button>
-      <button class="cb" onclick="map.zoomOut()" title="Alejar">−</button>
-      <button class="cb" onclick="resetView()" title="Extensión completa">⊡</button>
-    </div>
-    <div class="norte"><div class="norte-a"></div><div class="norte-l">N</div></div>
-    <div class="creds">© Municipalidad de Recoleta · datos-recoleta/banco-suelo · Mapbox · OSM</div>
+    <div class="lista-container" id="lista"></div>
   </div>
 </div>
 
 <script>
-mapboxgl.accessToken = 'pk.eyJ1IjoicnVwYW5jbyIsImEiOiJjbXExMnE1Z2wxMWZ3MnFvZ3k3bXJ4ZzBlIn0.4fdlXb3-rGlAGzRofTaxBA';
+  mapboxgl.accessToken = 'pk.eyJ1IjoicnVwYW5jbyIsImEiOiJjbTdndm4xMGkwZGQ3MmpzOTN6Mzk0dWhzIn0.y5ECbRFBDTPcqgGvkHCBmQ';
 
-const GEOJSON = 'https://raw.githubusercontent.com/datos-recoleta/banco-suelo/refs/heads/main/cartografia/inmuebles_banco_suelo.geojson';
-const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSD32rwi3Ed3sQ0w6bQQYBbATcz1QuRyYq17crO2E6lPnPMd0ZOGdT-Is4PQEzGI7gjTjkP0NjLROtA/pub?gid=1728987519&single=true&output=csv';
+  const GEOJSON_URL = 'https://raw.githubusercontent.com/datos-recoleta/banco-suelo/main/cartografia/inmuebles_banco_suelo.geojson';
+  const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSD32rwi3Ed3sQ0w6bQQYBbATcz1QuRyYq17crO2E6lPnPMd0ZOGdT-Is4PQEzGI7gjTjkP0NjLROtA/pub?gid=1728987519&single=true&output=csv';
 
-const map = new mapboxgl.Map({
-  container: 'map',
-  style: 'mapbox://styles/mapbox/dark-v11',
-  center: [-70.633, -33.408],
-  zoom: 13,
-  attributionControl: false
-});
-
-let features = [];
-let sheetsData = {};
-let selId = null;
-let popup = null;
-
-// Parsear CSV simple
-function parseCSV(text) {
-  const lines = text.split('\n').filter(l => l.trim());
-  const headers = parseCSVLine(lines[0]);
-  const rows = {};
-  for (let i = 1; i < lines.length; i++) {
-    const vals = parseCSVLine(lines[i]);
-    const obj = {};
-    headers.forEach((h, idx) => { obj[h.trim()] = (vals[idx] || '').trim(); });
-    const id = obj['ID'];
-    if (id) rows[id] = obj;
-  }
-  return rows;
-}
-
-function parseCSVLine(line) {
-  const result = [];
-  let cur = '';
-  let inQ = false;
-  for (let i = 0; i < line.length; i++) {
-    const c = line[i];
-    if (c === '"') { inQ = !inQ; }
-    else if (c === ',' && !inQ) { result.push(cur); cur = ''; }
-    else { cur += c; }
-  }
-  result.push(cur);
-  return result;
-}
-
-function v(val, fallback) {
-  return (val && val.trim() && val.trim() !== '') ? val.trim() : (fallback || '—');
-}
-
-function formatNum(val) {
-  if (!val || val === '—') return '—';
-  const n = parseFloat(val.replace(/\./g,'').replace(',','.'));
-  if (isNaN(n)) return val;
-  return n.toLocaleString('es-CL');
-}
-
-function formatMoney(val) {
-  if (!val || val === '—') return '—';
-  const n = parseFloat(val.replace(/\./g,'').replace(',','.'));
-  if (isNaN(n)) return val;
-  return '$ ' + n.toLocaleString('es-CL');
-}
-
-map.on('load', async () => {
-  try {
-    // Cargar GeoJSON
-    document.getElementById('loadStatus').textContent = 'Leyendo geometrías...';
-    const geoRes = await fetch(GEOJSON);
-    const geoData = await geoRes.json();
-    features = geoData.features;
-
-    // Cargar CSV Sheets
-    document.getElementById('loadStatus').textContent = 'Conectando con Sheets...';
-    const csvRes = await fetch(CSV_URL);
-    const csvText = await csvRes.text();
-    sheetsData = parseCSV(csvText);
-
-    // Stats
-    const totalComodato = Object.values(sheetsData).filter(r => r['EN COMODATO A'] && r['EN COMODATO A'].trim()).length;
-    document.getElementById('sTotal').textContent = features.length;
-    document.getElementById('sVisible').textContent = features.length;
-    document.getElementById('sComodato').textContent = totalComodato;
-
-    // Capas mapa
-    map.addSource('bs', { type:'geojson', data:geoData });
-    map.addLayer({ id:'bs-fill', type:'fill', source:'bs', paint:{ 'fill-color':'#C87941', 'fill-opacity':0.22 } });
-    map.addLayer({ id:'bs-line', type:'line', source:'bs', paint:{ 'line-color':'#C87941', 'line-width':1.4, 'line-opacity':0.85 } });
-    map.addLayer({ id:'bs-sel-fill', type:'fill', source:'bs', filter:['==',['get','ID'],''], paint:{ 'fill-color':'#E8883A', 'fill-opacity':0.5 } });
-    map.addLayer({ id:'bs-sel-line', type:'line', source:'bs', filter:['==',['get','ID'],''], paint:{ 'line-color':'#E8883A', 'line-width':2.5, 'line-opacity':1 } });
-
-    renderLista(features);
-    fitBounds(features);
-    document.getElementById('loading').style.display = 'none';
-
-    map.on('click', 'bs-fill', e => {
-      const p = e.features[0].properties;
-      selectFeature(p.ID, e.lngLat);
-    });
-    map.on('mouseenter', 'bs-fill', () => { map.getCanvas().style.cursor = 'pointer'; });
-    map.on('mouseleave', 'bs-fill', () => { map.getCanvas().style.cursor = ''; });
-
-  } catch(e) {
-    console.error(e);
-    document.querySelector('.load-t').textContent = 'ERROR AL CARGAR';
-    document.getElementById('loadStatus').textContent = e.message;
-  }
-});
-
-function flatCoords(geo) {
-  const out = [];
-  const walk = a => { if (!Array.isArray(a)) return; if (typeof a[0]==='number'){out.push(a);return;} a.forEach(walk); };
-  walk(geo.coordinates);
-  return out;
-}
-
-function centroid(geo) {
-  const c = flatCoords(geo);
-  if (!c.length) return null;
-  return [c.reduce((s,p)=>s+p[0],0)/c.length, c.reduce((s,p)=>s+p[1],0)/c.length];
-}
-
-function fitBounds(feats) {
-  const b = new mapboxgl.LngLatBounds();
-  feats.forEach(f => flatCoords(f.geometry).forEach(c => b.extend(c)));
-  if (!b.isEmpty()) map.fitBounds(b, { padding:48, maxZoom:17, duration:800 });
-}
-
-function resetView() { fitBounds(features); }
-
-function buildPopup(id) {
-  const s = sheetsData[id] || {};
-  const dir = v(s['DIRECCION']);
-  const num = v(s['N°'], '');
-  const dirFull = num && num !== '—' ? `${dir} ${num}` : dir;
-
-  const row = (k, val, cls) => `
-    <div class="p-row">
-      <span class="p-k">${k}</span>
-      <span class="p-v ${(!val || val==='—') ? 'na' : ''}">${val || '—'}</span>
-    </div>`;
-
-  const hasLegal = s['Foja'] || s['N°'] || s['Año'];
-
-  return `
-    <div class="p-strip"></div>
-    <div class="p-inner">
-      <div class="p-id">${id}</div>
-      <div class="p-dir">${dirFull}</div>
-
-      <div class="p-sec">Identificación</div>
-      ${row('ROL SII', v(s['ROL SII']))}
-      ${s['ROL SII_SECUNDARIO'] ? row('ROL SECUNDARIO', v(s['ROL SII_SECUNDARIO'])) : ''}
-      ${row('UNIDAD VECINAL', v(s['UNIDAD VECINAL']))}
-
-      <div class="p-sep"></div>
-      <div class="p-sec">Físico</div>
-      ${row('SUP. TERRENO', formatNum(s['SUPERFICIE TERRENO m2']) + ' m²')}
-      ${row('SUP. CONSTRUC.', formatNum(s['SUPERFICIE CONSTRUCCIÓN m2']) + ' m²')}
-      ${row('ESTADO', v(s['ESTADO DEL TERRENO']))}
-
-      <div class="p-sep"></div>
-      <div class="p-sec">Gestión</div>
-      ${row('USO ACTUAL', v(s['USO ACTUAL ']))}
-      ${row('COMODATO A', v(s['EN COMODATO A']))}
-
-      ${hasLegal ? `
-      <div class="p-sep"></div>
-      <div class="p-sec">Inscripción CBR</div>
-      ${row('FOJA', v(s['Foja']))}
-      ${row('N°', v(s['N°']))}
-      ${row('AÑO', v(s['Año']))}
-      ` : ''}
-
-      <div class="p-sep"></div>
-      <div class="p-sec">Valorización</div>
-      ${row('AVALÚO FISCAL 2S 2025', formatMoney(s['AVALÚO FISCAL 2DO SEMESTRE 2025']))}
-    </div>
-  `;
-}
-
-function selectFeature(id, lngLat) {
-  selId = id;
-  map.setFilter('bs-sel-fill', ['==',['get','ID'], id]);
-  map.setFilter('bs-sel-line', ['==',['get','ID'], id]);
-
-  document.querySelectorAll('.item').forEach(el => el.classList.toggle('sel', el.dataset.id === id));
-  const el = document.querySelector(`[data-id="${id}"]`);
-  if (el) el.scrollIntoView({ behavior:'smooth', block:'nearest' });
-
-  const f = features.find(f => f.properties.ID === id);
-  if (!f) return;
-  const coords = lngLat || centroid(f.geometry);
-  if (popup) popup.remove();
-  popup = new mapboxgl.Popup({ offset:14, closeButton:true, closeOnClick:false, maxWidth:'300px' })
-    .setLngLat(coords)
-    .setHTML(buildPopup(id))
-    .addTo(map);
-}
-
-function getDir(id) {
-  const s = sheetsData[id];
-  if (s && s['DIRECCION']) {
-    const n = s['N°'] || '';
-    return (s['DIRECCION'] + (n ? ' ' + n : '')).trim();
-  }
-  const raw = id.replace(/^MUN-\d+-\d+_?/, '');
-  return raw ? raw.replace(/-/g,' ') : id;
-}
-
-function getRol(id) {
-  const s = sheetsData[id];
-  return s ? (s['ROL SII'] || '—') : '—';
-}
-
-function renderLista(feats) {
-  const list = document.getElementById('listaScroll');
-  list.innerHTML = '';
-  feats.forEach(f => {
-    const id = f.properties.ID;
-    const div = document.createElement('div');
-    div.className = 'item' + (id === selId ? ' sel' : '');
-    div.dataset.id = id;
-    div.innerHTML = `
-      <div class="item-id">${id}</div>
-      <div class="item-dir">${getDir(id)}</div>
-      <div class="item-rol">ROL ${getRol(id)}</div>
-    `;
-    div.addEventListener('click', () => {
-      const c = centroid(f.geometry);
-      if (c) { map.flyTo({ center:c, zoom:17, duration:700 }); setTimeout(() => selectFeature(id, c), 350); }
-    });
-    list.appendChild(div);
+  const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/mapbox/dark-v11',
+    center: [-70.6406, -33.4000],
+    zoom: 13,
+    attributionControl: false
   });
-  document.getElementById('sVisible').textContent = feats.length;
-}
 
-document.getElementById('searchInput').addEventListener('input', e => {
-  const q = e.target.value.toLowerCase().trim();
-  const filtered = q
-    ? features.filter(f => {
-        const id = f.properties.ID;
-        return id.toLowerCase().includes(q) ||
-               getRol(id).toLowerCase().includes(q) ||
-               getDir(id).toLowerCase().includes(q);
-      })
-    : features;
-  renderLista(filtered);
-});
+  map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-left');
+  map.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-left');
+
+  let datosSheets = {};
+  let geojsonData = null;
+  let popupActivo = new mapboxgl.Popup({ closeButton: true, maxWidth: '320px' });
+  let itemActivo = null;
+
+  // Parse CSV simple
+  function parseCSV(texto) {
+    const lineas = texto.trim().split('\n');
+    const headers = lineas[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+    const filas = {};
+    for (let i = 1; i < lineas.length; i++) {
+      const cols = lineas[i].match(/(".*?"|[^,]+|(?<=,)(?=,)|^(?=,)|(?<=,)$)/g) || [];
+      const fila = {};
+      headers.forEach((h, idx) => {
+        fila[h] = (cols[idx] || '').trim().replace(/^"|"$/g, '');
+      });
+      const id = fila['ID'] || fila['id'] || '';
+      if (id) filas[id] = fila;
+    }
+    return filas;
+  }
+
+  function val(fila, campo) {
+    if (!fila) return '—';
+    const v = fila[campo];
+    return (v && v.trim() !== '') ? v.trim() : '—';
+  }
+
+  function formatPeso(v) {
+    if (!v || v === '—') return '—';
+    const n = parseInt(v.replace(/\D/g, ''));
+    if (isNaN(n)) return v;
+    return '$' + n.toLocaleString('es-CL');
+  }
+
+  function construirPopupHTML(props, fila) {
+    const id = props.ID || '—';
+    const rol = props.ROL || val(fila, 'ROL SII');
+    const dir = fila ? (val(fila, 'DIRECCION') + (val(fila, 'N° DOMICILIARIO') !== '—' ? ' ' + val(fila, 'N° DOMICILIARIO') : '')) : '—';
+    const sup = val(fila, 'SUPERFICIE TERRENO m2');
+    const uso = val(fila, 'USO ACTUAL ') || val(fila, 'USO ACTUAL');
+    const estado = val(fila, 'ESTADO GENERAL INFRAESTRUCTURA');
+    const avaluo = formatPeso(val(fila, 'AVALÚO FISCAL 2DO SEMESTRE 2025') || val(fila, 'AVALUO FISCAL 2DO SEMESTRE 2025'));
+    const comodato = val(fila, 'EN COMODATO A');
+    const link = fila ? (val(fila, 'HIPERVINCULO') || val(fila, 'HIPERVÍNCULO')) : '—';
+
+    const linkHTML = (link && link !== '—')
+      ? `<a class="popup-link" href="${link}" target="_blank">Ver ficha completa →</a>`
+      : '';
+
+    return `
+      <div class="popup-inner">
+        <div class="popup-id">${id}</div>
+        <div class="popup-dir">${dir}</div>
+        <div class="popup-grid">
+          <div class="popup-campo">
+            <div class="popup-label">ROL SII</div>
+            <div class="popup-valor">${rol}</div>
+          </div>
+          <div class="popup-campo">
+            <div class="popup-label">Sup. Terreno</div>
+            <div class="popup-valor">${sup !== '—' ? sup + ' m²' : '—'}</div>
+          </div>
+          <div class="popup-campo full">
+            <div class="popup-label">Uso Actual</div>
+            <div class="popup-valor">${uso}</div>
+          </div>
+          <div class="popup-campo full">
+            <div class="popup-label">Estado General</div>
+            <div class="popup-valor">${estado}</div>
+          </div>
+          <div class="popup-campo">
+            <div class="popup-label">Avalúo Fiscal</div>
+            <div class="popup-valor">${avaluo}</div>
+          </div>
+          <div class="popup-campo">
+            <div class="popup-label">En Comodato</div>
+            <div class="popup-valor">${comodato}</div>
+          </div>
+        </div>
+        ${linkHTML}
+      </div>`;
+  }
+
+  function abrirPopup(feature, lngLat) {
+    const props = feature.properties;
+    const fila = datosSheets[props.ID] || null;
+    const html = construirPopupHTML(props, fila);
+    popupActivo.setLngLat(lngLat).setHTML(html).addTo(map);
+  }
+
+  function centrarEnFeature(feature) {
+    // Calcular centro del polígono
+    const coords = feature.geometry.coordinates[0][0];
+    let lng = 0, lat = 0;
+    coords.forEach(c => { lng += c[0]; lat += c[1]; });
+    return [lng / coords.length, lat / coords.length];
+  }
+
+  function construirLista(features) {
+    const lista = document.getElementById('lista');
+    lista.innerHTML = '';
+
+    if (features.length === 0) {
+      lista.innerHTML = '<div class="sin-datos">Sin resultados</div>';
+      return;
+    }
+
+    features.forEach(f => {
+      const props = f.properties;
+      const fila = datosSheets[props.ID] || null;
+      const dir = fila
+        ? (val(fila, 'DIRECCION') + (val(fila, 'N° DOMICILIARIO') !== '—' ? ' ' + val(fila, 'N° DOMICILIARIO') : ''))
+        : props.ID;
+
+      const item = document.createElement('div');
+      item.className = 'item';
+      item.dataset.id = props.ID;
+      item.innerHTML = `
+        <div class="item-id">${props.ID}</div>
+        <div class="item-dir">${dir}</div>
+        <div class="item-rol">ROL ${props.ROL || '—'}</div>
+      `;
+
+      item.addEventListener('click', () => {
+        // Marcar activo
+        document.querySelectorAll('.item').forEach(i => i.classList.remove('activo'));
+        item.classList.add('activo');
+
+        const centro = centrarEnFeature(f);
+        map.flyTo({ center: centro, zoom: 16, duration: 800 });
+        abrirPopup(f, centro);
+      });
+
+      lista.appendChild(item);
+    });
+  }
+
+  function filtrarLista(query) {
+    if (!geojsonData) return;
+    const q = query.toLowerCase();
+    const filtrados = geojsonData.features.filter(f => {
+      const props = f.properties;
+      const fila = datosSheets[props.ID] || {};
+      const dir = (fila['DIRECCION'] || '') + ' ' + (fila['N° DOMICILIARIO'] || '');
+      return (
+        (props.ID || '').toLowerCase().includes(q) ||
+        (props.ROL || '').toLowerCase().includes(q) ||
+        dir.toLowerCase().includes(q)
+      );
+    });
+    construirLista(filtrados);
+  }
+
+  document.getElementById('buscar').addEventListener('input', e => {
+    filtrarLista(e.target.value);
+  });
+
+  async function cargarDatos() {
+    try {
+      // Cargar CSV y GeoJSON en paralelo
+      const [csvRes, geoRes] = await Promise.all([
+        fetch(CSV_URL),
+        fetch(GEOJSON_URL)
+      ]);
+
+      const csvTexto = await csvRes.text();
+      datosSheets = parseCSV(csvTexto);
+      geojsonData = await geoRes.json();
+
+      document.getElementById('contador').textContent =
+        geojsonData.features.length + ' inmuebles';
+
+      map.on('load', () => {
+        map.addSource('inmuebles', {
+          type: 'geojson',
+          data: geojsonData
+        });
+
+        // Capa relleno
+        map.addLayer({
+          id: 'inmuebles-fill',
+          type: 'fill',
+          source: 'inmuebles',
+          paint: {
+            'fill-color': '#4a8ff0',
+            'fill-opacity': 0.35
+          }
+        });
+
+        // Capa borde
+        map.addLayer({
+          id: 'inmuebles-border',
+          type: 'line',
+          source: 'inmuebles',
+          paint: {
+            'line-color': '#c8f04a',
+            'line-width': 1.5,
+            'line-opacity': 0.9
+          }
+        });
+
+        // Hover highlight
+        map.addLayer({
+          id: 'inmuebles-hover',
+          type: 'fill',
+          source: 'inmuebles',
+          paint: {
+            'fill-color': '#c8f04a',
+            'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.4, 0]
+          }
+        });
+
+        let hoveredId = null;
+
+        map.on('mousemove', 'inmuebles-fill', e => {
+          if (e.features.length > 0) {
+            map.getCanvas().style.cursor = 'pointer';
+            if (hoveredId !== null) {
+              map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: false });
+            }
+            hoveredId = e.features[0].id;
+            map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: true });
+          }
+        });
+
+        map.on('mouseleave', 'inmuebles-fill', () => {
+          map.getCanvas().style.cursor = '';
+          if (hoveredId !== null) {
+            map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: false });
+          }
+          hoveredId = null;
+        });
+
+        map.on('click', 'inmuebles-fill', e => {
+          const feature = e.features[0];
+          const lngLat = e.lngLat;
+          abrirPopup(feature, lngLat);
+
+          // Marcar activo en lista
+          const id = feature.properties.ID;
+          document.querySelectorAll('.item').forEach(i => {
+            i.classList.toggle('activo', i.dataset.id === id);
+          });
+          // Scroll a item
+          const itemEl = document.querySelector(`.item[data-id="${id}"]`);
+          if (itemEl) itemEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        construirLista(geojsonData.features);
+        document.getElementById('loading').style.display = 'none';
+      });
+
+      // Si el mapa ya cargó
+      if (map.loaded()) {
+        map.fire('load');
+      }
+
+    } catch (err) {
+      console.error('Error cargando datos:', err);
+      document.getElementById('loading').innerHTML =
+        '<div style="color:#ff5555;font-family:monospace;padding:20px">Error cargando datos.<br>Revisa las URLs y el token Mapbox.</div>';
+    }
+  }
+
+  cargarDatos();
 </script>
 </body>
 </html>
