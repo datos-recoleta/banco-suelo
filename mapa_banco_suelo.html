@@ -842,6 +842,11 @@
       const [csvRes, geoRes] = await Promise.all([fetch(CSV_URL), fetch(GEOJSON_URL)]);
       const csvTexto = await csvRes.text();
       datosSheets = parseCSV(csvTexto);
+      // DEBUG
+      const keys = Object.keys(datosSheets);
+      console.log('CSV cargado:', keys.length, 'filas');
+      console.log('Primera key:', keys[0]);
+      if (keys[0]) console.log('Primera fila:', JSON.stringify(datosSheets[keys[0]]));
       geojsonData = await geoRes.json();
 
       document.getElementById('badge-total').textContent = geojsonData.features.length + ' inmuebles';
