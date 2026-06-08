@@ -428,7 +428,17 @@ async function cargar() {
     const [csvRes, geoRes] = await Promise.all([fetch(CSV_URL), fetch(GEOJSON_URL)]);
     const csvTxt = await csvRes.text();
     sheets = parseCSV(csvTxt);
-    console.log('CSV keys:', Object.keys(sheets).length, '| Primera:', Object.keys(sheets)[0]);
+    const _keys = Object.keys(sheets);
+    console.log('CSV keys:', _keys.length, '| Primera:', _keys[0]);
+    if (_keys[0]) {
+      const _fila = sheets[_keys[0]];
+      console.log('Columnas disponibles:', Object.keys(_fila).join(' | '));
+      console.log('SUP_TERRENO:', _fila['SUP_TERRENO']);
+      console.log('USO_ACTUAL:', _fila['USO_ACTUAL']);
+      console.log('ESTADO:', _fila['ESTADO']);
+      console.log('COMODATO_A:', _fila['COMODATO_A']);
+      console.log('AVALUO_FISCAL_2025_2:', _fila['AVALUO_FISCAL_2025_2']);
+    }
     geojson = await geoRes.json();
     document.getElementById('badge').textContent = geojson.features.length + ' inmuebles';
 
