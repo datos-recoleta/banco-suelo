@@ -9,937 +9,451 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --panel-w: 300px;
-      --azul: #1a3a5c;
-      --azul-claro: #2a5298;
-      --acento: #e8640a;
-      --verde: #2d8c4e;
-      --gris-bg: #f4f4f2;
-      --gris-borde: #ddd;
-      --texto: #1a1a1a;
-      --texto-muted: #666;
-      --blanco: #ffffff;
+      --azul: #1a3a5c; --azul2: #2a5298; --acento: #e8640a;
+      --gris-bg: #f4f4f2; --gris-borde: #ddd; --texto: #1a1a1a;
+      --muted: #666; --blanco: #fff;
     }
+    body { font-family: 'Inter', sans-serif; background: var(--gris-bg); color: var(--texto); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--gris-bg);
-      color: var(--texto);
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
+    header { background: var(--azul); color: white; padding: 12px 20px; display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+    .escudo { width: 36px; height: 36px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px; color: var(--azul); flex-shrink: 0; }
+    .header-info h1 { font-size: 16px; font-weight: 700; }
+    .header-info p { font-size: 11px; opacity: 0.75; margin-top: 1px; }
+    .badge { margin-left: auto; background: var(--acento); color: white; font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
 
-    /* HEADER */
-    header {
-      background: var(--azul);
-      color: white;
-      padding: 12px 20px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      flex-shrink: 0;
-      z-index: 10;
-    }
-
-    .header-escudo {
-      width: 36px;
-      height: 36px;
-      background: white;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      font-size: 11px;
-      color: var(--azul);
-      flex-shrink: 0;
-      letter-spacing: -0.5px;
-    }
-
-    .header-info h1 {
-      font-size: 16px;
-      font-weight: 700;
-      line-height: 1.2;
-    }
-
-    .header-info p {
-      font-size: 11px;
-      opacity: 0.75;
-      margin-top: 1px;
-      letter-spacing: 0.03em;
-    }
-
-    .header-badge {
-      margin-left: auto;
-      background: var(--acento);
-      color: white;
-      font-size: 10px;
-      font-weight: 600;
-      padding: 3px 10px;
-      border-radius: 20px;
-      letter-spacing: 0.05em;
-    }
-
-    /* LAYOUT */
-    .main {
-      display: flex;
-      flex: 1;
-      overflow: hidden;
-    }
-
-    /* PANEL */
-    .panel {
-      width: var(--panel-w);
-      background: var(--blanco);
-      border-right: 1px solid var(--gris-borde);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      flex-shrink: 0;
-      box-shadow: 2px 0 8px rgba(0,0,0,0.08);
-    }
-
-    .panel-section {
-      padding: 14px 16px;
-      border-bottom: 1px solid var(--gris-borde);
-    }
-
-    .panel-section h2 {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--texto-muted);
-      margin-bottom: 10px;
-    }
-
-    /* BÚSQUEDA */
-    .search-wrap {
-      position: relative;
-    }
-
-    .search-wrap svg {
-      position: absolute;
-      left: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--texto-muted);
-    }
-
-    #buscar {
-      width: 100%;
-      padding: 9px 12px 9px 34px;
-      border: 1.5px solid var(--gris-borde);
-      border-radius: 6px;
-      font-family: 'Inter', sans-serif;
-      font-size: 13px;
-      color: var(--texto);
-      background: var(--gris-bg);
-      outline: none;
-      transition: border-color 0.2s;
-    }
-
-    #buscar:focus { border-color: var(--azul-claro); background: white; }
-    #buscar::placeholder { color: #aaa; }
-
-    /* ESTADÍSTICAS */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-    }
-
-    .stat {
-      background: var(--gris-bg);
-      border-radius: 6px;
-      padding: 8px 10px;
-      text-align: center;
-    }
-
-    .stat-num {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--azul);
-      line-height: 1;
-    }
-
-    .stat-label {
-      font-size: 10px;
-      color: var(--texto-muted);
-      margin-top: 2px;
-      line-height: 1.3;
-    }
-
-    /* FILTROS */
-    .filtro-select {
-      width: 100%;
-      padding: 7px 10px;
-      border: 1.5px solid var(--gris-borde);
-      border-radius: 6px;
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      color: var(--texto);
-      background: white;
-      outline: none;
-      margin-bottom: 8px;
-      cursor: pointer;
-    }
-
-    .filtro-select:last-child { margin-bottom: 0; }
-    .filtro-select:focus { border-color: var(--azul-claro); }
-
-    /* SIMBOLOGÍA */
-    .simbologia-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: var(--texto);
-      margin-bottom: 6px;
-    }
-
-    .simbologia-item:last-child { margin-bottom: 0; }
-
-    .simbolo {
-      width: 16px;
-      height: 16px;
-      border-radius: 3px;
-      flex-shrink: 0;
-    }
-
-    /* LISTA */
-    .lista-header {
-      padding: 10px 16px 8px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--gris-borde);
-    }
-
-    .lista-header h2 {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--texto-muted);
-    }
-
-    #contador-lista {
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--azul-claro);
-    }
-
-    .lista-container {
-      flex: 1;
-      overflow-y: auto;
-    }
-
-    .lista-container::-webkit-scrollbar { width: 4px; }
-    .lista-container::-webkit-scrollbar-track { background: transparent; }
-    .lista-container::-webkit-scrollbar-thumb { background: var(--gris-borde); border-radius: 2px; }
-
-    .item {
-      padding: 10px 16px;
-      cursor: pointer;
-      border-left: 3px solid transparent;
-      border-bottom: 1px solid #f0f0f0;
-      transition: all 0.1s;
-    }
-
-    .item:hover { background: #f0f5ff; border-left-color: var(--azul-claro); }
-    .item.activo { background: #e8f0fe; border-left-color: var(--azul); }
-
-    .item-id {
-      font-size: 10px;
-      color: var(--acento);
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      margin-bottom: 2px;
-    }
-
-    .item-dir {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--texto);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .item-rol {
-      font-size: 11px;
-      color: var(--texto-muted);
-      margin-top: 1px;
-    }
-
-    .sin-datos {
-      padding: 24px 16px;
-      text-align: center;
-      color: var(--texto-muted);
-      font-size: 13px;
-    }
-
-    /* MAPA */
+    .main { display: flex; flex: 1; overflow: hidden; }
     #map { flex: 1; height: 100%; }
 
-    /* POPUP */
-    .mapboxgl-popup-content {
-      background: white !important;
-      border-radius: 8px !important;
-      padding: 0 !important;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.18) !important;
-      min-width: 280px;
-      max-width: 320px;
-      border: 1px solid var(--gris-borde) !important;
-    }
+    .panel { width: 300px; background: var(--blanco); border-right: 1px solid var(--gris-borde); display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0; box-shadow: 2px 0 8px rgba(0,0,0,0.08); }
+    .sec { padding: 14px 16px; border-bottom: 1px solid var(--gris-borde); }
+    .sec h2 { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
 
-    .mapboxgl-popup-tip { display: none !important; }
+    .search-wrap { position: relative; }
+    .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); }
+    #buscar { width: 100%; padding: 9px 12px 9px 34px; border: 1.5px solid var(--gris-borde); border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--texto); background: var(--gris-bg); outline: none; }
+    #buscar:focus { border-color: var(--azul2); background: white; }
+    #buscar::placeholder { color: #aaa; }
 
-    .mapboxgl-popup-close-button {
-      font-size: 20px !important;
-      color: var(--texto-muted) !important;
-      padding: 8px 12px !important;
-      right: 0 !important;
-      top: 0 !important;
-    }
+    .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .stat { background: var(--gris-bg); border-radius: 6px; padding: 8px 10px; text-align: center; }
+    .stat-n { font-size: 22px; font-weight: 700; color: var(--azul); line-height: 1; }
+    .stat-l { font-size: 10px; color: var(--muted); margin-top: 2px; }
 
-    .mapboxgl-popup-close-button:hover {
-      background: none !important;
-      color: var(--texto) !important;
-    }
+    select.filtro { width: 100%; padding: 7px 10px; border: 1.5px solid var(--gris-borde); border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 12px; color: var(--texto); background: white; outline: none; margin-bottom: 8px; cursor: pointer; }
+    select.filtro:last-child { margin-bottom: 0; }
 
+    .simb-item { display: flex; align-items: center; gap: 8px; font-size: 12px; margin-bottom: 6px; }
+    .simb-item:last-child { margin-bottom: 0; }
+    .simb-box { width: 16px; height: 16px; border-radius: 3px; flex-shrink: 0; }
 
-    .popup-imagen {
-      width: 100%;
-      height: 140px;
-      object-fit: cover;
-      border-radius: 8px 8px 0 0;
-      display: block;
-    }
-    .popup-cabecera {
-      background: var(--azul);
-      color: white;
-      padding: 12px 36px 12px 14px;
-      border-radius: 8px 8px 0 0;
-    }
+    .lista-head { padding: 10px 16px 8px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--gris-borde); }
+    .lista-head h2 { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    #cnt { font-size: 11px; font-weight: 600; color: var(--azul2); }
 
-    .popup-id {
-      font-size: 10px;
-      opacity: 0.75;
-      letter-spacing: 0.08em;
-      margin-bottom: 3px;
-    }
+    .lista { flex: 1; overflow-y: auto; }
+    .lista::-webkit-scrollbar { width: 4px; }
+    .lista::-webkit-scrollbar-thumb { background: var(--gris-borde); border-radius: 2px; }
 
-    .popup-dir {
-      font-size: 14px;
-      font-weight: 700;
-      line-height: 1.3;
-    }
-
-    .popup-body {
-      max-height: 340px;
-      overflow-y: auto;
-      padding: 12px 14px;
-    }
-
-    .popup-seccion {
-      margin-bottom: 10px;
-    }
-
-    .popup-seccion-titulo {
-      font-size: 9px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--texto-muted);
-      margin-bottom: 6px;
-      padding-bottom: 4px;
-      border-bottom: 1px solid #f0f0f0;
-    }
-
-    .popup-fila {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 4px;
-      gap: 8px;
-    }
-
-    .popup-fila-label {
-      font-size: 11px;
-      color: var(--texto-muted);
-      flex-shrink: 0;
-    }
-
-    .popup-fila-valor {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--texto);
-      text-align: right;
-    }
-
-    .popup-link {
-      display: block;
-      text-align: center;
-      padding: 9px;
-      background: var(--azul);
-      color: white;
-      font-size: 12px;
-      font-weight: 600;
-      text-decoration: none;
-      border-radius: 0 0 8px 8px;
-      transition: background 0.15s;
-      letter-spacing: 0.02em;
-    }
-
-    .popup-link:hover { background: var(--azul-claro); }
-
+    .item { padding: 10px 16px; cursor: pointer; border-left: 3px solid transparent; border-bottom: 1px solid #f0f0f0; transition: all 0.1s; }
+    .item:hover { background: #f0f5ff; border-left-color: var(--azul2); }
+    .item.activo { background: #e8f0fe; border-left-color: var(--azul); }
+    .item-id { font-size: 10px; color: var(--acento); font-weight: 600; letter-spacing: 0.06em; margin-bottom: 2px; }
+    .item-dir { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-rol { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .sin-datos { padding: 24px 16px; text-align: center; color: var(--muted); font-size: 13px; }
 
     /* SELECTOR MAPA BASE */
-    .mapbase-control {
-      position: absolute;
-      bottom: 32px;
-      right: 10px;
-      z-index: 5;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
+    .mapbase { position: absolute; bottom: 32px; right: 10px; z-index: 5; display: flex; flex-direction: column; gap: 4px; }
+    .mb-btn { background: white; border: 1.5px solid var(--gris-borde); border-radius: 6px; padding: 6px 10px; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; color: var(--muted); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.12); min-width: 70px; transition: all 0.15s; }
+    .mb-btn:hover { border-color: var(--azul2); color: var(--azul); }
+    .mb-btn.activo { background: var(--azul); color: white; border-color: var(--azul); }
 
-    .mapbase-btn {
-      background: white;
-      border: 1.5px solid var(--gris-borde);
-      border-radius: 6px;
-      padding: 6px 10px;
-      font-family: 'Inter', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--texto-muted);
-      cursor: pointer;
-      transition: all 0.15s;
-      text-align: center;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.12);
-      min-width: 70px;
-    }
+    /* POPUP */
+    .mapboxgl-popup-content { background: white !important; border-radius: 8px !important; padding: 0 !important; box-shadow: 0 4px 24px rgba(0,0,0,0.18) !important; min-width: 280px; max-width: 320px; border: 1px solid var(--gris-borde) !important; }
+    .mapboxgl-popup-tip { display: none !important; }
+    .mapboxgl-popup-close-button { font-size: 20px !important; color: var(--muted) !important; padding: 8px 12px !important; right: 0 !important; top: 0 !important; }
+    .mapboxgl-popup-close-button:hover { background: none !important; color: var(--texto) !important; }
 
-    .mapbase-btn:hover { border-color: var(--azul-claro); color: var(--azul); }
-    .mapbase-btn.activo { background: var(--azul); color: white; border-color: var(--azul); }
+    .popup-img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px 8px 0 0; display: block; }
+    .popup-head { background: var(--azul); color: white; padding: 12px 36px 12px 14px; border-radius: 8px 8px 0 0; }
+    .popup-head.con-img { border-radius: 0; }
+    .popup-pid { font-size: 10px; opacity: 0.75; letter-spacing: 0.08em; margin-bottom: 3px; }
+    .popup-dir { font-size: 14px; font-weight: 700; line-height: 1.3; }
+    .popup-body { padding: 12px 14px; max-height: 320px; overflow-y: auto; }
+    .popup-body::-webkit-scrollbar { width: 3px; }
+    .popup-body::-webkit-scrollbar-thumb { background: var(--gris-borde); }
+    .psec { margin-bottom: 10px; }
+    .psec-t { font-size: 9px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; padding-bottom: 4px; border-bottom: 1px solid #f0f0f0; }
+    .pfila { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; gap: 8px; }
+    .pfila-l { font-size: 11px; color: var(--muted); flex-shrink: 0; }
+    .pfila-v { font-size: 12px; font-weight: 600; text-align: right; }
+    .popup-link { display: block; text-align: center; padding: 9px; background: var(--azul); color: white; font-size: 12px; font-weight: 600; text-decoration: none; border-radius: 0 0 8px 8px; }
+    .popup-link:hover { background: var(--azul2); }
 
     /* LOADING */
-    #loading {
-      position: fixed;
-      inset: 0;
-      background: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      gap: 14px;
-    }
-
-    .loading-titulo {
-      font-size: 20px;
-      font-weight: 700;
-      color: var(--azul);
-    }
-
-    .loading-sub {
-      font-size: 13px;
-      color: var(--texto-muted);
-    }
-
-    .loading-barra {
-      width: 220px;
-      height: 3px;
-      background: var(--gris-borde);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-
-    .loading-progreso {
-      height: 100%;
-      background: var(--azul-claro);
-      border-radius: 3px;
-      animation: progreso 1.6s ease-in-out infinite;
-    }
-
-    @keyframes progreso {
-      0% { width: 0%; margin-left: 0%; }
-      50% { width: 55%; margin-left: 22%; }
-      100% { width: 0%; margin-left: 100%; }
-    }
+    #loading { position: fixed; inset: 0; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; gap: 14px; }
+    .l-titulo { font-size: 20px; font-weight: 700; color: var(--azul); }
+    .l-barra { width: 220px; height: 3px; background: var(--gris-borde); border-radius: 3px; overflow: hidden; }
+    .l-prog { height: 100%; background: var(--azul2); border-radius: 3px; animation: prog 1.6s ease-in-out infinite; }
+    @keyframes prog { 0%{width:0%;margin-left:0%} 50%{width:55%;margin-left:22%} 100%{width:0%;margin-left:100%} }
+    .l-sub { font-size: 13px; color: var(--muted); }
   </style>
 </head>
 <body>
 
 <div id="loading">
-  <div class="loading-titulo">Banco de Suelo Municipal</div>
-  <div class="loading-barra"><div class="loading-progreso"></div></div>
-  <div class="loading-sub">Cargando inmuebles municipales...</div>
+  <div class="l-titulo">Banco de Suelo Municipal</div>
+  <div class="l-barra"><div class="l-prog"></div></div>
+  <div class="l-sub">Cargando inmuebles municipales...</div>
 </div>
 
 <header>
-  <div class="header-escudo">MR</div>
+  <div class="escudo">MR</div>
   <div class="header-info">
     <h1>Banco de Suelo Municipal</h1>
     <p>Municipalidad de Recoleta · MUN-06101 · Región Metropolitana</p>
   </div>
-  <div class="header-badge" id="badge-total">— inmuebles</div>
+  <div class="badge" id="badge">— inmuebles</div>
 </header>
 
 <div class="main">
   <div class="panel">
-
-    <!-- Búsqueda -->
-    <div class="panel-section">
+    <div class="sec">
       <div class="search-wrap">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-        </svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         <input type="text" id="buscar" placeholder="Buscar dirección o ID..." />
       </div>
     </div>
-
-    <!-- Estadísticas -->
-    <div class="panel-section">
+    <div class="sec">
       <h2>Estadísticas</h2>
-      <div class="stats-grid">
-        <div class="stat">
-          <div class="stat-num" id="stat-total">—</div>
-          <div class="stat-label">Total inmuebles</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num" id="stat-visibles">—</div>
-          <div class="stat-label">Visibles en filtro</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num" id="stat-comodato">—</div>
-          <div class="stat-label">En comodato</div>
-        </div>
-        <div class="stat">
-          <div class="stat-num" id="stat-sup">—</div>
-          <div class="stat-label">m² totales</div>
-        </div>
+      <div class="stats">
+        <div class="stat"><div class="stat-n" id="s-total">—</div><div class="stat-l">Total inmuebles</div></div>
+        <div class="stat"><div class="stat-n" id="s-vis">—</div><div class="stat-l">Visibles en filtro</div></div>
+        <div class="stat"><div class="stat-n" id="s-com">—</div><div class="stat-l">En comodato</div></div>
+        <div class="stat"><div class="stat-n" id="s-sup">—</div><div class="stat-l">m² totales</div></div>
       </div>
     </div>
-
-    <!-- Filtros -->
-    <div class="panel-section">
+    <div class="sec">
       <h2>Filtrar por</h2>
-      <select class="filtro-select" id="filtro-comodato">
+      <select class="filtro" id="f-comodato">
         <option value="">Comodato: Todos</option>
         <option value="si">Con comodato</option>
         <option value="no">Sin comodato</option>
       </select>
     </div>
-
-    <!-- Simbología -->
-    <div class="panel-section">
+    <div class="sec">
       <h2>Simbología cartográfica</h2>
-      <div class="simbologia-item">
-        <div class="simbolo" style="background:#7b2d8b;opacity:0.75;border:1.5px solid #5a1a6b"></div>
+      <div class="simb-item">
+        <div class="simb-box" style="background:#7b2d8b;opacity:0.75;border:1.5px solid #5a1a6b"></div>
         <span>Suelo público municipal</span>
       </div>
     </div>
-
-    <!-- Lista -->
-    <div class="lista-header">
+    <div class="lista-head">
       <h2>Catastro de inmuebles</h2>
-      <span id="contador-lista">—</span>
+      <span id="cnt">—</span>
     </div>
-    <div class="lista-container" id="lista"></div>
-
+    <div class="lista" id="lista"></div>
   </div>
 
   <div id="map"></div>
 
-  <div class="mapbase-control">
-    <button class="mapbase-btn activo" onclick="cambiarMapa('light-v11', this)">Calles</button>
-    <button class="mapbase-btn" onclick="cambiarMapa('satellite-streets-v12', this)">Satélite</button>
-    <button class="mapbase-btn" onclick="cambiarMapa('dark-v11', this)">Oscuro</button>
+  <div class="mapbase">
+    <button class="mb-btn activo" onclick="cambiarMapa('light-v11',this)">Calles</button>
+    <button class="mb-btn" onclick="cambiarMapa('satellite-streets-v12',this)">Satélite</button>
+    <button class="mb-btn" onclick="cambiarMapa('dark-v11',this)">Oscuro</button>
   </div>
 </div>
 
 <script>
-  mapboxgl.accessToken = 'pk.eyJ1IjoicnVwYW5jbyIsImEiOiJjbXExMnE1Z2wxMWZ3MnFvZ3k3bXJ4ZzBlIn0.4fdlXb3-rGlAGzRofTaxBA';
+mapboxgl.accessToken = 'pk.eyJ1IjoicnVwYW5jbyIsImEiOiJjbXExMnE1Z2wxMWZ3MnFvZ3k3bXJ4ZzBlIn0.4fdlXb3-rGlAGzRofTaxBA';
 
-  const GEOJSON_URL = 'https://raw.githubusercontent.com/datos-recoleta/banco-suelo/main/cartografia/inmuebles_banco_suelo.geojson';
-  const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSD32rwi3Ed3sQ0w6bQQYBbATcz1QuRyYq17crO2E6lPnPMd0ZOGdT-Is4PQEzGI7gjTjkP0NjLROtA/pub?gid=1728987519&single=true&output=csv';
+const GEOJSON_URL = 'https://raw.githubusercontent.com/datos-recoleta/banco-suelo/main/cartografia/inmuebles_banco_suelo.geojson';
+const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSD32rwi3Ed3sQ0w6bQQYBbATcz1QuRyYq17crO2E6lPnPMd0ZOGdT-Is4PQEzGI7gjTjkP0NjLROtA/pub?gid=1728987519&single=true&output=csv';
 
-  const map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/mapbox/light-v11',
-    center: [-70.6406, -33.4000],
-    zoom: 13,
-    attributionControl: false
+const map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/light-v11',
+  center: [-70.6406, -33.4000],
+  zoom: 13,
+  attributionControl: false
+});
+map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
+map.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-right');
+
+let sheets = {};
+let geojson = null;
+let popup = new mapboxgl.Popup({ closeButton: true, maxWidth: '340px', offset: 10 });
+let hoveredId = null;
+let selectedId = null;
+let filtroCom = '';
+
+// ── CSV parser robusto ──
+function parseCSV(txt) {
+  // Eliminar BOM y espacios al inicio
+  txt = txt.replace(/^\uFEFF/, '').trim();
+  const rows = txt.split(/\r?\n/);
+  const headers = splitCSVRow(rows[0]).map(h => h.trim());
+  const out = {};
+  for (let i = 1; i < rows.length; i++) {
+    if (!rows[i].trim()) continue;
+    const cols = splitCSVRow(rows[i]);
+    const fila = {};
+    headers.forEach((h, idx) => { fila[h] = (cols[idx] || '').trim(); });
+    const id = fila['ID'] || '';
+    if (id) out[id] = fila;
+  }
+  return out;
+}
+
+function splitCSVRow(row) {
+  const cols = [];
+  let cur = '', inQ = false;
+  for (let i = 0; i < row.length; i++) {
+    const c = row[i];
+    if (c === '"') { inQ = !inQ; }
+    else if (c === ',' && !inQ) { cols.push(cur); cur = ''; }
+    else { cur += c; }
+  }
+  cols.push(cur);
+  return cols;
+}
+
+function g(fila, ...campos) {
+  if (!fila) return '—';
+  for (const c of campos) {
+    const v = fila[c];
+    if (v !== undefined && v.trim() !== '') return v.trim();
+  }
+  return '—';
+}
+
+function peso(v) {
+  if (!v || v === '—') return '—';
+  const n = parseInt(v.replace(/\D/g, ''));
+  return isNaN(n) ? v : '$' + n.toLocaleString('es-CL');
+}
+
+function tieneComodato(fila) {
+  if (!fila) return false;
+  const c = g(fila, 'COMODATO_A');
+  return c !== '—' && c.toLowerCase() !== 'no' && c.toLowerCase() !== 'sin comodato';
+}
+
+function popup_html(props, fila) {
+  const id   = props.ID || '—';
+  const rol  = props.ROL || g(fila, 'ROL SII');
+  const dir  = fila ? (g(fila,'DIRECCION') + (g(fila,'NUM_DOMICILIARIO') !== '—' ? ' ' + g(fila,'NUM_DOMICILIARIO') : '')) : id;
+  const sup  = g(fila, 'SUP_TERRENO');
+  const uso  = g(fila, 'USO_ACTUAL');
+  const est  = g(fila, 'ESTADO');
+  const av   = peso(g(fila, 'AVALUO_FISCAL_2025_2'));
+  const com  = g(fila, 'COMODATO_A');
+  const link = g(fila, 'HIPERVINCULO');
+  const img  = g(fila, 'IMAGEN');
+
+  const imgHTML  = (img !== '—') ? `<img class="popup-img" src="${img}" onerror="this.style.display='none'" />` : '';
+  const headCls  = img !== '—' ? 'con-img' : '';
+  const linkHTML = (link !== '—') ? `<a class="popup-link" href="${link}" target="_blank">Ver ficha completa →</a>` : '';
+
+  return `${imgHTML}
+    <div class="popup-head ${headCls}">
+      <div class="popup-pid">${id}</div>
+      <div class="popup-dir">${dir}</div>
+    </div>
+    <div class="popup-body">
+      <div class="psec">
+        <div class="psec-t">Identificación</div>
+        <div class="pfila"><span class="pfila-l">ROL SII</span><span class="pfila-v">${rol}</span></div>
+      </div>
+      <div class="psec">
+        <div class="psec-t">Físico</div>
+        <div class="pfila"><span class="pfila-l">Sup. Terreno</span><span class="pfila-v">${sup !== '—' ? sup + ' m²' : '—'}</span></div>
+        <div class="pfila"><span class="pfila-l">Estado</span><span class="pfila-v">${est}</span></div>
+      </div>
+      <div class="psec">
+        <div class="psec-t">Gestión</div>
+        <div class="pfila"><span class="pfila-l">Uso actual</span><span class="pfila-v">${uso}</span></div>
+        <div class="pfila"><span class="pfila-l">Comodato a</span><span class="pfila-v">${com}</span></div>
+      </div>
+      <div class="psec">
+        <div class="psec-t">Valorización</div>
+        <div class="pfila"><span class="pfila-l">Avalúo fiscal 2S 2025</span><span class="pfila-v">${av}</span></div>
+      </div>
+    </div>
+    ${linkHTML}`;
+}
+
+function centroFeature(f) {
+  const coords = f.geometry.coordinates[0][0];
+  let lng = 0, lat = 0;
+  coords.forEach(c => { lng += c[0]; lat += c[1]; });
+  return [lng / coords.length, lat / coords.length];
+}
+
+function abrirPopup(feature, lngLat) {
+  const fila = sheets[feature.properties.ID] || null;
+  popup.setLngLat(lngLat).setHTML(popup_html(feature.properties, fila)).addTo(map);
+}
+
+function pasaFiltro(f) {
+  const fila = sheets[f.properties.ID] || null;
+  if (filtroCom === 'si') return tieneComodato(fila);
+  if (filtroCom === 'no') return !tieneComodato(fila);
+  return true;
+}
+
+function estadisticas(features) {
+  const vis = features.filter(pasaFiltro);
+  const com = vis.filter(f => tieneComodato(sheets[f.properties.ID] || null));
+  let sup = 0;
+  vis.forEach(f => {
+    const fila = sheets[f.properties.ID];
+    if (fila) { const s = parseFloat(g(fila,'SUP_TERRENO').replace(',','.')); if (!isNaN(s)) sup += s; }
   });
+  document.getElementById('s-total').textContent = geojson ? geojson.features.length : '—';
+  document.getElementById('s-vis').textContent = vis.length;
+  document.getElementById('s-com').textContent = com.length;
+  document.getElementById('s-sup').textContent = sup > 0 ? Math.round(sup).toLocaleString('es-CL') : '—';
+}
 
-  map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
-  map.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-right');
+function lista(features) {
+  const el = document.getElementById('lista');
+  el.innerHTML = '';
+  const fil = features.filter(pasaFiltro);
+  document.getElementById('cnt').textContent = fil.length;
+  estadisticas(features);
 
-  let datosSheets = {};
-  let geojsonData = null;
-  let popup = new mapboxgl.Popup({ closeButton: true, maxWidth: '340px', offset: 10 });
-  let featureSeleccionada = null;
-  let filtroComodato = '';
+  if (!fil.length) { el.innerHTML = '<div class="sin-datos">Sin resultados</div>'; return; }
 
-  function parseCSV(texto) {
-    const lineas = texto.trim().split('\n');
-    const headers = lineas[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
-    const filas = {};
-    for (let i = 1; i < lineas.length; i++) {
-      const cols = [];
-      let actual = '';
-      let dentroComillas = false;
-      for (let c = 0; c < lineas[i].length; c++) {
-        const ch = lineas[i][c];
-        if (ch === '"') { dentroComillas = !dentroComillas; }
-        else if (ch === ',' && !dentroComillas) { cols.push(actual.trim()); actual = ''; }
-        else { actual += ch; }
-      }
-      cols.push(actual.trim());
-      const fila = {};
-      headers.forEach((h, idx) => { fila[h] = (cols[idx] || '').replace(/^"|"$/g, '').trim(); });
-      const id = fila['ID'] || '';
-      if (id) filas[id] = fila;
-    }
-    return filas;
-  }
+  fil.forEach(f => {
+    const props = f.properties;
+    const fila  = sheets[props.ID] || null;
+    const dir   = fila ? (g(fila,'DIRECCION') + (g(fila,'NUM_DOMICILIARIO') !== '—' ? ' ' + g(fila,'NUM_DOMICILIARIO') : '')) : props.ID;
 
-  function v(fila, ...campos) {
-    if (!fila) return '—';
-    for (const c of campos) {
-      const val = fila[c];
-      if (val && val.trim() !== '') return val.trim();
-    }
-    return '—';
-  }
+    const div = document.createElement('div');
+    div.className = 'item';
+    div.dataset.id = props.ID;
+    div.innerHTML = `<div class="item-id">${props.ID}</div><div class="item-dir">${dir}</div><div class="item-rol">ROL ${props.ROL || '—'}</div>`;
 
-  function formatPeso(val) {
-    if (!val || val === '—') return '—';
-    const n = parseInt(val.replace(/\D/g, ''));
-    if (isNaN(n)) return val;
-    return '$' + n.toLocaleString('es-CL');
-  }
-
-  function tieneComodato(fila) {
-    if (!fila) return false;
-    const c = v(fila, 'COMODATO_A');
-    return c !== '—' && c !== '' && c.toLowerCase() !== 'no' && c.toLowerCase() !== 'sin comodato';
-  }
-
-  function construirPopup(props, fila, lngLat) {
-    const id = props.ID || '—';
-    const rol = props.ROL || v(fila, 'ROL SII');
-    const dir = fila ? (v(fila, 'DIRECCION') + (v(fila, 'NUM_DOMICILIARIO') !== '—' ? ' ' + v(fila, 'NUM_DOMICILIARIO') : '')) : id;
-    const sup = v(fila, 'SUP_TERRENO');
-    const uso = v(fila, 'USO_ACTUAL');
-    const estado = v(fila, 'ESTADO');
-    const avaluo = formatPeso(v(fila, 'AVALUO_FISCAL_2025_2'));
-    const comodato = v(fila, 'COMODATO_A');
-    const link = v(fila, 'HIPERVINCULO');
-
-    const imagen = v(fila, 'IMAGEN');
-    const imagenHTML = (imagen && imagen !== '—')
-      ? `<img class="popup-imagen" src="${imagen}" alt="Foto inmueble" onerror="this.style.display='none'" />`
-      : '';
-
-    const linkHTML = (link && link !== '—')
-      ? `<a class="popup-link" href="${link}" target="_blank">Ver ficha completa →</a>`
-      : '';
-
-    return `
-      ${imagenHTML}
-      <div class="popup-cabecera" style="${imagenHTML ? 'border-radius:0' : ''}">
-        <div class="popup-id">${id}</div>
-        <div class="popup-dir">${dir}</div>
-      </div>
-      <div class="popup-body">
-        <div class="popup-seccion">
-          <div class="popup-seccion-titulo">Identificación</div>
-          <div class="popup-fila">
-            <span class="popup-fila-label">ROL SII</span>
-            <span class="popup-fila-valor">${rol}</span>
-          </div>
-        </div>
-        <div class="popup-seccion">
-          <div class="popup-seccion-titulo">Físico</div>
-          <div class="popup-fila">
-            <span class="popup-fila-label">Sup. Terreno</span>
-            <span class="popup-fila-valor">${sup !== '—' ? sup + ' m²' : '—'}</span>
-          </div>
-          <div class="popup-fila">
-            <span class="popup-fila-label">Estado</span>
-            <span class="popup-fila-valor">${estado}</span>
-          </div>
-        </div>
-        <div class="popup-seccion">
-          <div class="popup-seccion-titulo">Gestión</div>
-          <div class="popup-fila">
-            <span class="popup-fila-label">Uso actual</span>
-            <span class="popup-fila-valor">${uso}</span>
-          </div>
-          <div class="popup-fila">
-            <span class="popup-fila-label">Comodato a</span>
-            <span class="popup-fila-valor">${comodato}</span>
-          </div>
-        </div>
-        <div class="popup-seccion">
-          <div class="popup-seccion-titulo">Valorización</div>
-          <div class="popup-fila">
-            <span class="popup-fila-label">Avalúo fiscal 2S 2025</span>
-            <span class="popup-fila-valor">${avaluo}</span>
-          </div>
-        </div>
-      </div>
-      ${linkHTML}`;
-  }
-
-  function abrirPopup(feature, lngLat) {
-    const props = feature.properties;
-    const fila = datosSheets[props.ID] || null;
-    popup.setLngLat(lngLat).setHTML(construirPopup(props, fila, [lngLat.lng, lngLat.lat])).addTo(map);
-  }
-
-  function centroFeature(feature) {
-    const coords = feature.geometry.coordinates[0][0];
-    let lng = 0, lat = 0;
-    coords.forEach(c => { lng += c[0]; lat += c[1]; });
-    return [lng / coords.length, lat / coords.length];
-  }
-
-  function featuresPasaFiltro(feature) {
-    const fila = datosSheets[feature.properties.ID] || null;
-    if (filtroComodato === 'si') return tieneComodato(fila);
-    if (filtroComodato === 'no') return !tieneComodato(fila);
-    return true;
-  }
-
-  function actualizarEstadisticas(features) {
-    const visibles = features.filter(f => featuresPasaFiltro(f));
-    const conComodato = visibles.filter(f => tieneComodato(datosSheets[f.properties.ID] || null));
-    let supTotal = 0;
-    visibles.forEach(f => {
-      const fila = datosSheets[f.properties.ID];
-      if (fila) {
-        const s = parseFloat(v(fila, 'SUP_TERRENO').replace(',', '.'));
-        if (!isNaN(s)) supTotal += s;
-      }
+    div.addEventListener('click', () => {
+      document.querySelectorAll('.item').forEach(i => i.classList.remove('activo'));
+      div.classList.add('activo');
+      const centro = centroFeature(f);
+      map.flyTo({ center: centro, zoom: 17, duration: 800 });
+      abrirPopup(f, centro);
+      marcarSeleccionado(f.id);
     });
-    document.getElementById('stat-total').textContent = geojsonData ? geojsonData.features.length : '—';
-    document.getElementById('stat-visibles').textContent = visibles.length;
-    document.getElementById('stat-comodato').textContent = conComodato.length;
-    document.getElementById('stat-sup').textContent = supTotal > 0 ? Math.round(supTotal).toLocaleString('es-CL') : '—';
+    el.appendChild(div);
+  });
+}
+
+function marcarSeleccionado(id) {
+  if (selectedId !== null) {
+    try { map.setFeatureState({ source: 'inmuebles', id: selectedId }, { selected: false }); } catch(e) {}
   }
+  selectedId = id;
+  if (selectedId !== undefined && selectedId !== null) {
+    try { map.setFeatureState({ source: 'inmuebles', id: selectedId }, { selected: true }); } catch(e) {}
+  }
+}
 
-  function construirLista(features) {
-    const lista = document.getElementById('lista');
-    lista.innerHTML = '';
-    const filtrados = features.filter(f => featuresPasaFiltro(f));
-    document.getElementById('contador-lista').textContent = filtrados.length;
+function agregarCapas() {
+  if (!map.getSource('inmuebles')) {
+    geojson.features.forEach((f, i) => { f.id = i; });
+    map.addSource('inmuebles', { type: 'geojson', data: geojson });
+  }
+  if (!map.getLayer('inmuebles-fill'))
+    map.addLayer({ id: 'inmuebles-fill', type: 'fill', source: 'inmuebles', paint: { 'fill-color': '#7b2d8b', 'fill-opacity': 0.5 } });
+  if (!map.getLayer('inmuebles-border'))
+    map.addLayer({ id: 'inmuebles-border', type: 'line', source: 'inmuebles', paint: { 'line-color': '#5a1a6b', 'line-width': 1.5 } });
+  if (!map.getLayer('inmuebles-hover'))
+    map.addLayer({ id: 'inmuebles-hover', type: 'fill', source: 'inmuebles', paint: { 'fill-color': '#e8640a', 'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.5, 0] } });
+  if (!map.getLayer('inmuebles-sel'))
+    map.addLayer({ id: 'inmuebles-sel', type: 'line', source: 'inmuebles', paint: { 'line-color': '#ff6600', 'line-width': ['case', ['boolean', ['feature-state', 'selected'], false], 4, 0] } });
+}
 
-    if (filtrados.length === 0) {
-      lista.innerHTML = '<div class="sin-datos">Sin resultados</div>';
-      return;
-    }
+function cambiarMapa(estilo, btn) {
+  map.setStyle('mapbox://styles/mapbox/' + estilo);
+  document.querySelectorAll('.mb-btn').forEach(b => b.classList.remove('activo'));
+  btn.classList.add('activo');
+  map.once('style.load', agregarCapas);
+}
 
-    filtrados.forEach(f => {
-      const props = f.properties;
-      const fila = datosSheets[props.ID] || null;
-      const dir = fila
-        ? (v(fila, 'DIRECCION') + (v(fila, 'NUM_DOMICILIARIO') !== '—' ? ' ' + v(fila, 'NUM_DOMICILIARIO') : ''))
-        : props.ID;
+document.getElementById('buscar').addEventListener('input', e => {
+  const q = e.target.value.toLowerCase();
+  if (!geojson) return;
+  const fil = geojson.features.filter(f => {
+    const fila = sheets[f.properties.ID] || {};
+    const dir = (fila['DIRECCION'] || '') + ' ' + (fila['NUM_DOMICILIARIO'] || '');
+    return (f.properties.ID || '').toLowerCase().includes(q) ||
+           (f.properties.ROL || '').toLowerCase().includes(q) ||
+           dir.toLowerCase().includes(q);
+  });
+  lista(fil);
+});
 
-      const item = document.createElement('div');
-      item.className = 'item';
-      item.dataset.id = props.ID;
-      item.innerHTML = `
-        <div class="item-id">${props.ID}</div>
-        <div class="item-dir">${dir}</div>
-        <div class="item-rol">ROL ${props.ROL || '—'}</div>`;
+document.getElementById('f-comodato').addEventListener('change', e => {
+  filtroCom = e.target.value;
+  if (geojson) lista(geojson.features);
+});
 
-      item.addEventListener('click', () => {
-        document.querySelectorAll('.item').forEach(i => i.classList.remove('activo'));
-        item.classList.add('activo');
-        const centro = centroFeature(f);
-        map.flyTo({ center: centro, zoom: 17, duration: 800 });
-        // Halo de selección
-        if (selectedId !== null) {
-          map.setFeatureState({ source: 'inmuebles', id: selectedId }, { selected: false });
+async function cargar() {
+  try {
+    const [csvRes, geoRes] = await Promise.all([fetch(CSV_URL), fetch(GEOJSON_URL)]);
+    const csvTxt = await csvRes.text();
+    sheets = parseCSV(csvTxt);
+    console.log('CSV keys:', Object.keys(sheets).length, '| Primera:', Object.keys(sheets)[0]);
+    geojson = await geoRes.json();
+    document.getElementById('badge').textContent = geojson.features.length + ' inmuebles';
+
+    map.on('load', () => {
+      agregarCapas();
+
+      map.on('mousemove', 'inmuebles-fill', e => {
+        if (!e.features.length) return;
+        map.getCanvas().style.cursor = 'pointer';
+        const id = e.features[0].id;
+        if (hoveredId !== null && hoveredId !== id) {
+          try { map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: false }); } catch(ex) {}
         }
-        selectedId = f.id;
-        if (selectedId !== undefined) {
-          map.setFeatureState({ source: 'inmuebles', id: selectedId }, { selected: true });
+        hoveredId = id;
+        if (hoveredId !== undefined) {
+          try { map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: true }); } catch(ex) {}
         }
-        abrirPopup(f, centro);
       });
 
-      lista.appendChild(item);
-    });
-
-    actualizarEstadisticas(features);
-  }
-
-  function buscar(q) {
-    if (!geojsonData) return;
-    const ql = q.toLowerCase();
-    const filtrados = geojsonData.features.filter(f => {
-      const props = f.properties;
-      const fila = datosSheets[props.ID] || {};
-      const dir = (fila['DIRECCION'] || '') + ' ' + (fila['NUM_DOMICILIARIO'] || '');
-      return (
-        (props.ID || '').toLowerCase().includes(ql) ||
-        (props.ROL || '').toLowerCase().includes(ql) ||
-        dir.toLowerCase().includes(ql)
-      );
-    });
-    construirLista(filtrados);
-  }
-
-  document.getElementById('buscar').addEventListener('input', e => buscar(e.target.value));
-  document.getElementById('filtro-comodato').addEventListener('change', e => {
-    filtroComodato = e.target.value;
-    construirLista(geojsonData ? geojsonData.features : []);
-  });
-
-
-  function cambiarMapa(estilo, btn) {
-    map.setStyle('mapbox://styles/mapbox/' + estilo);
-    document.querySelectorAll('.mapbase-btn').forEach(b => b.classList.remove('activo'));
-    btn.classList.add('activo');
-    // Re-agregar capas al cambiar estilo
-    map.once('style.load', () => {
-      if (geojsonData) {
-        if (!map.getSource('inmuebles')) {
-          // Agregar IDs numéricos a cada feature para setFeatureState
-        geojsonData.features.forEach((f, i) => { f.id = i; });
-        map.addSource('inmuebles', { type: 'geojson', data: geojsonData, promoteId: 'id' });
+      map.on('mouseleave', 'inmuebles-fill', () => {
+        map.getCanvas().style.cursor = '';
+        if (hoveredId !== null) {
+          try { map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: false }); } catch(ex) {}
         }
-        if (!map.getLayer('inmuebles-fill')) {
-          map.addLayer({ id: 'inmuebles-fill', type: 'fill', source: 'inmuebles', paint: { 'fill-color': '#7b2d8b', 'fill-opacity': 0.55 } });
-        }
-        if (!map.getLayer('inmuebles-border')) {
-          map.addLayer({ id: 'inmuebles-border', type: 'line', source: 'inmuebles', paint: { 'line-color': '#5a1a6b', 'line-width': 1.5 } });
-        }
-        if (!map.getLayer('inmuebles-hover')) {
-          map.addLayer({ id: 'inmuebles-hover', type: 'fill', source: 'inmuebles', paint: { 'fill-color': '#e8640a', 'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.5, 0] } });
-        }
-        if (!map.getLayer('inmuebles-selected-border')) {
-          map.addLayer({ id: 'inmuebles-selected-border', type: 'line', source: 'inmuebles', paint: { 'line-color': '#ff6600', 'line-width': ['case', ['boolean', ['feature-state', 'selected'], false], 4, 0], 'line-opacity': ['case', ['boolean', ['feature-state', 'selected'], false], 1, 0], 'line-blur': 2 } });
-        }
-      }
-    });
-  }
-
-  async function cargarDatos() {
-    try {
-      const [csvRes, geoRes] = await Promise.all([fetch(CSV_URL), fetch(GEOJSON_URL)]);
-      const csvTexto = await csvRes.text();
-      datosSheets = parseCSV(csvTexto);
-      // DEBUG
-      const keys = Object.keys(datosSheets);
-      console.log('CSV cargado:', keys.length, 'filas');
-      console.log('Primera key:', keys[0]);
-      if (keys[0]) console.log('Primera fila:', JSON.stringify(datosSheets[keys[0]]));
-      geojsonData = await geoRes.json();
-
-      document.getElementById('badge-total').textContent = geojsonData.features.length + ' inmuebles';
-
-      map.on('load', () => {
-        // Agregar IDs numéricos a cada feature para setFeatureState
-        geojsonData.features.forEach((f, i) => { f.id = i; });
-        map.addSource('inmuebles', { type: 'geojson', data: geojsonData, promoteId: 'id' });
-
-        map.addLayer({
-          id: 'inmuebles-fill',
-          type: 'fill',
-          source: 'inmuebles',
-          paint: { 'fill-color': '#7b2d8b', 'fill-opacity': 0.55 }
-        });
-
-        map.addLayer({
-          id: 'inmuebles-border',
-          type: 'line',
-          source: 'inmuebles',
-          paint: { 'line-color': '#5a1a6b', 'line-width': 1.5 }
-        });
-
-        map.addLayer({
-          id: 'inmuebles-hover',
-          type: 'fill',
-          source: 'inmuebles',
-          paint: {
-            'fill-color': '#e8640a',
-            'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.5, 0]
-          }
-        });
-
-        // Capa de halo para inmueble seleccionado
-        map.addLayer({
-          id: 'inmuebles-selected-border',
-          type: 'line',
-          source: 'inmuebles',
-          paint: {
-            'line-color': '#ff6600',
-            'line-width': ['case', ['boolean', ['feature-state', 'selected'], false], 4, 0],
-            'line-opacity': ['case', ['boolean', ['feature-state', 'selected'], false], 1, 0],
-            'line-blur': 2
-          }
-        });
-
-        let hoveredId = null;
-        let selectedId = null;
-
-        map.on('mousemove', 'inmuebles-fill', e => {
-          if (e.features.length > 0) {
-            map.getCanvas().style.cursor = 'pointer';
-            if (hoveredId !== null) map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: false });
-            hoveredId = e.features[0].id;
-            map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: true });
-          }
-        });
-
-        map.on('mouseleave', 'inmuebles-fill', () => {
-          map.getCanvas().style.cursor = '';
-          if (hoveredId !== null) map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: false });
-          hoveredId = null;
-        });
-
-        map.on('click', 'inmuebles-fill', e => {
-          const feature = e.features[0];
-          // Quitar selección anterior
-          if (selectedId !== null) {
-            map.setFeatureState({ source: 'inmuebles', id: selectedId }, { selected: false });
-          }
-          selectedId = feature.id;
-          map.setFeatureState({ source: 'inmuebles', id: selectedId }, { selected: true });
-          abrirPopup(feature, e.lngLat);
-          const id = feature.properties.ID;
-          document.querySelectorAll('.item').forEach(i => i.classList.toggle('activo', i.dataset.id === id));
-          const el = document.querySelector(`.item[data-id="${id}"]`);
-          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        });
-
-        construirLista(geojsonData.features);
-        document.getElementById('loading').style.display = 'none';
+        hoveredId = null;
       });
 
-      if (map.loaded()) map.fire('load');
+      map.on('click', 'inmuebles-fill', e => {
+        const feature = e.features[0];
+        marcarSeleccionado(feature.id);
+        abrirPopup(feature, e.lngLat);
+        const id = feature.properties.ID;
+        document.querySelectorAll('.item').forEach(i => i.classList.toggle('activo', i.dataset.id === id));
+        const el = document.querySelector(`.item[data-id="${id}"]`);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
 
-    } catch (err) {
-      console.error(err);
-      document.getElementById('loading').innerHTML =
-        '<div style="color:red;padding:20px;font-family:sans-serif">Error cargando datos.<br>Revisa la consola del navegador.</div>';
-    }
+      lista(geojson.features);
+      document.getElementById('loading').style.display = 'none';
+    });
+
+    if (map.loaded()) map.fire('load');
+
+  } catch(err) {
+    console.error(err);
+    document.getElementById('loading').innerHTML = '<div style="color:red;padding:20px;font-family:sans-serif">Error cargando datos.</div>';
   }
+}
 
-  cargarDatos();
+cargar();
 </script>
 </body>
 </html>
