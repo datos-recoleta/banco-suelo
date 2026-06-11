@@ -246,7 +246,7 @@ let popup = new mapboxgl.Popup({ closeButton: true, maxWidth: '340px', offset: 1
 let hoveredId = null, selectedId = null, filtroCom = '';
 
 const LAYER_GROUPS = {
-  inmuebles:     ['inmuebles-fill','inmuebles-border','inmuebles-hover','inmuebles-sel','inmuebles-labels'],
+  inmuebles:     ['inmuebles-fill','inmuebles-border','inmuebles-hover','inmuebles-sel'],
   'limite-urbano': ['limite-urbano-line'],
   usos:          ['prc-usos-fill','prc-usos-line','prc-usos-labels'],
   edif:          ['prc-edif-fill','prc-edif-line','prc-edif-labels'],
@@ -541,10 +541,7 @@ function agregarCapas() {
     map.addLayer({id:'inmuebles-hover',type:'fill',source:'inmuebles',paint:{'fill-color':'#e8640a','fill-opacity':['case',['boolean',['feature-state','hover'],false],0.5,0]}});
   if (!map.getLayer('inmuebles-sel'))
     map.addLayer({id:'inmuebles-sel',type:'line',source:'inmuebles',paint:{'line-color':'#ff6600','line-width':['case',['boolean',['feature-state','selected'],false],4,0]}});
-  if (!map.getLayer('inmuebles-labels'))
-    map.addLayer({id:'inmuebles-labels',type:'symbol',source:'inmuebles',
-      layout:{'text-field':['get','ID'],'text-font':['DIN Offc Pro Medium','Arial Unicode MS Regular'],'text-size':10,'text-anchor':'center','text-allow-overlap':false},
-      paint:{'text-color':'#5a1a6b','text-halo-color':'rgba(255,255,255,0.9)','text-halo-width':1.5}});
+
   agregarCapasPRC();
 }
 
