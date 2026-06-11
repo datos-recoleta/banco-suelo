@@ -15,71 +15,51 @@
       --muted: #666; --blanco: #fff;
     }
     body { font-family: 'Inter', sans-serif; background: var(--gris-bg); color: var(--texto); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-
     header { background: var(--azul); color: white; padding: 12px 20px; display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
     .escudo { width: 36px; height: 36px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 11px; color: var(--azul); flex-shrink: 0; }
     .header-info h1 { font-size: 16px; font-weight: 700; }
     .header-info p { font-size: 11px; opacity: 0.75; margin-top: 1px; }
     .badge { margin-left: auto; background: var(--acento); color: white; font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
-
     .main { display: flex; flex: 1; overflow: hidden; }
     #map { flex: 1; height: 100%; }
-
     .panel { width: 300px; background: var(--blanco); border-right: 1px solid var(--gris-borde); display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0; box-shadow: 2px 0 8px rgba(0,0,0,0.08); }
-    .sec { padding: 14px 16px; border-bottom: 1px solid var(--gris-borde); }
+    .sec { padding: 14px 16px; border-bottom: 1px solid var(--gris-borde); flex-shrink: 0; }
     .sec h2 { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-
     .search-wrap { position: relative; }
     .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); }
     #buscar { width: 100%; padding: 9px 12px 9px 34px; border: 1.5px solid var(--gris-borde); border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 13px; color: var(--texto); background: var(--gris-bg); outline: none; }
     #buscar:focus { border-color: var(--azul2); background: white; }
     #buscar::placeholder { color: #aaa; }
-
     .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .stat { background: var(--gris-bg); border-radius: 6px; padding: 8px 10px; text-align: center; }
     .stat-n { font-size: 22px; font-weight: 700; color: var(--azul); line-height: 1; }
     .stat-l { font-size: 10px; color: var(--muted); margin-top: 2px; }
-
     select.filtro { width: 100%; padding: 7px 10px; border: 1.5px solid var(--gris-borde); border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 12px; color: var(--texto); background: white; outline: none; margin-bottom: 8px; cursor: pointer; }
     select.filtro:last-child { margin-bottom: 0; }
 
-    /* ── TABLA DE CONTENIDOS (estilo ArcGIS) ── */
-    .toc { display: flex; flex-direction: column; gap: 2px; }
-
-    .toc-group { border: 1px solid var(--gris-borde); border-radius: 6px; overflow: hidden; margin-bottom: 6px; }
-    .toc-group:last-child { margin-bottom: 0; }
-
-    .toc-header {
-      display: flex; align-items: center; gap: 7px;
-      padding: 7px 10px; background: var(--gris-bg);
-      cursor: pointer; user-select: none;
-      font-size: 12px; font-weight: 600; color: var(--texto);
-      border-bottom: 1px solid var(--gris-borde);
-    }
-    .toc-header:hover { background: #ebebea; }
-    .toc-header input[type=checkbox] { width: 14px; height: 14px; cursor: pointer; accent-color: var(--azul2); flex-shrink: 0; }
-    .toc-arrow { margin-left: auto; font-size: 10px; color: var(--muted); transition: transform 0.2s; }
-    .toc-group.collapsed .toc-arrow { transform: rotate(-90deg); }
-
-    .toc-body { padding: 6px 8px 8px; background: white; }
-    .toc-group.collapsed .toc-body { display: none; }
-
-    .toc-item { display: flex; align-items: center; gap: 7px; padding: 3px 2px; font-size: 11px; color: var(--texto); }
-    .toc-swatch { width: 18px; height: 14px; border-radius: 2px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.15); }
-    .toc-label { line-height: 1.3; }
-
-    /* inmuebles dentro de toc */
-    .toc-single { display: flex; align-items: center; gap: 7px; padding: 7px 10px; font-size: 12px; font-weight: 600; color: var(--texto); background: var(--gris-bg); border-radius: 6px; border: 1px solid var(--gris-borde); margin-bottom: 6px; }
+    /* ── TABLA DE CONTENIDOS ── */
+    .toc-scroll { overflow-y: auto; flex: 0 0 auto; max-height: 42vh; padding: 10px 12px; border-bottom: 1px solid var(--gris-borde); }
+    .toc-scroll h2 { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+    .toc { display: flex; flex-direction: column; gap: 4px; }
+    .toc-single { display: flex; align-items: center; gap: 7px; padding: 6px 8px; font-size: 12px; font-weight: 600; color: var(--texto); background: var(--gris-bg); border-radius: 5px; border: 1px solid var(--gris-borde); }
     .toc-single input[type=checkbox] { width: 14px; height: 14px; cursor: pointer; accent-color: var(--azul2); flex-shrink: 0; }
+    .toc-group { border: 1px solid var(--gris-borde); border-radius: 5px; overflow: hidden; }
+    .toc-header { display: flex; align-items: center; gap: 7px; padding: 6px 8px; background: var(--gris-bg); cursor: pointer; user-select: none; font-size: 12px; font-weight: 600; color: var(--texto); }
+    .toc-header:hover { background: #e8e8e6; }
+    .toc-header input[type=checkbox] { width: 14px; height: 14px; cursor: pointer; accent-color: var(--azul2); flex-shrink: 0; }
+    .toc-arrow { margin-left: auto; font-size: 10px; color: var(--muted); transition: transform 0.2s; flex-shrink: 0; }
+    .toc-group.collapsed .toc-arrow { transform: rotate(-90deg); }
+    .toc-body { padding: 5px 8px 7px 8px; background: white; border-top: 1px solid var(--gris-borde); }
+    .toc-group.collapsed .toc-body { display: none; }
+    .toc-item { display: flex; align-items: flex-start; gap: 7px; padding: 3px 2px; font-size: 11px; color: var(--texto); line-height: 1.35; }
+    .toc-swatch { width: 18px; height: 13px; border-radius: 2px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.18); margin-top: 1px; }
 
-    .lista-head { padding: 10px 16px 8px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--gris-borde); }
+    .lista-head { padding: 10px 16px 8px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--gris-borde); flex-shrink: 0; }
     .lista-head h2 { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
     #cnt { font-size: 11px; font-weight: 600; color: var(--azul2); }
-
     .lista { flex: 1; overflow-y: auto; }
     .lista::-webkit-scrollbar { width: 4px; }
     .lista::-webkit-scrollbar-thumb { background: var(--gris-borde); border-radius: 2px; }
-
     .item { padding: 10px 16px; cursor: pointer; border-left: 3px solid transparent; border-bottom: 1px solid #f0f0f0; transition: all 0.1s; }
     .item:hover { background: #f0f5ff; border-left-color: var(--azul2); }
     .item.activo { background: #e8f0fe; border-left-color: var(--azul); }
@@ -87,17 +67,14 @@
     .item-dir { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .item-rol { font-size: 11px; color: var(--muted); margin-top: 1px; }
     .sin-datos { padding: 24px 16px; text-align: center; color: var(--muted); font-size: 13px; }
-
     .mapbase { position: absolute; bottom: 32px; right: 10px; z-index: 5; display: flex; flex-direction: column; gap: 4px; }
     .mb-btn { background: white; border: 1.5px solid var(--gris-borde); border-radius: 6px; padding: 6px 10px; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; color: var(--muted); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.12); min-width: 70px; transition: all 0.15s; }
     .mb-btn:hover { border-color: var(--azul2); color: var(--azul); }
     .mb-btn.activo { background: var(--azul); color: white; border-color: var(--azul); }
-
     .mapboxgl-popup-content { background: white !important; border-radius: 8px !important; padding: 0 !important; box-shadow: 0 4px 24px rgba(0,0,0,0.18) !important; min-width: 260px; max-width: 320px; border: 1px solid var(--gris-borde) !important; }
     .mapboxgl-popup-tip { display: none !important; }
     .mapboxgl-popup-close-button { font-size: 20px !important; color: var(--muted) !important; padding: 8px 12px !important; right: 0 !important; top: 0 !important; }
     .mapboxgl-popup-close-button:hover { background: none !important; color: var(--texto) !important; }
-
     .popup-img { width: 100%; height: 140px; object-fit: cover; border-radius: 8px 8px 0 0; display: block; }
     .popup-head { background: var(--azul); color: white; padding: 12px 36px 12px 14px; border-radius: 8px 8px 0 0; }
     .popup-head.con-img { border-radius: 0; }
@@ -115,7 +92,6 @@
     .popup-link:hover { background: var(--azul2); }
     .popup-prc-head { padding: 10px 36px 10px 14px; border-radius: 8px 8px 0 0; color: white; }
     .popup-prc-body { padding: 12px 14px; }
-
     #loading { position: fixed; inset: 0; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; gap: 14px; }
     .l-titulo { font-size: 20px; font-weight: 700; color: var(--azul); }
     .l-barra { width: 220px; height: 3px; background: var(--gris-borde); border-radius: 3px; overflow: hidden; }
@@ -125,13 +101,11 @@
   </style>
 </head>
 <body>
-
 <div id="loading">
   <div class="l-titulo">Banco de Suelo Municipal</div>
   <div class="l-barra"><div class="l-prog"></div></div>
   <div class="l-sub">Cargando inmuebles municipales...</div>
 </div>
-
 <header>
   <div class="escudo">MR</div>
   <div class="header-info">
@@ -140,7 +114,6 @@
   </div>
   <div class="badge" id="badge">— inmuebles</div>
 </header>
-
 <div class="main">
   <div class="panel">
     <div class="sec">
@@ -168,21 +141,21 @@
     </div>
 
     <!-- TABLA DE CONTENIDOS -->
-    <div class="sec" style="overflow-y:auto; flex:0 0 auto;">
+    <div class="toc-scroll">
       <h2>Capas</h2>
       <div class="toc">
 
-        <!-- Inmuebles municipales -->
+        <!-- Suelo público municipal -->
         <div class="toc-single">
           <input type="checkbox" id="chk-inmuebles" checked onchange="toggleLayerGroup('inmuebles', this.checked)" />
-          <div style="width:18px;height:14px;border-radius:2px;background:#7b2d8b;opacity:0.85;border:1px solid #5a1a6b;flex-shrink:0"></div>
+          <div style="width:18px;height:13px;border-radius:2px;background:#7b2d8b;border:1px solid #5a1a6b;flex-shrink:0"></div>
           <span>Suelo público municipal</span>
         </div>
 
         <!-- Límite Urbano -->
-        <div class="toc-single" id="grp-limite-urbano">
-          <input type="checkbox" id="chk-limite-urbano" checked onclick="toggleLayerGroup('limite-urbano', this.checked)" />
-          <svg width="28" height="10" style="flex-shrink:0"><line x1="0" y1="5" x2="28" y2="5" stroke="#1a3a5c" stroke-width="2.5" stroke-dasharray="5,3"/></svg>
+        <div class="toc-single">
+          <input type="checkbox" id="chk-limite" checked onchange="toggleLayerGroup('limite-urbano', this.checked)" />
+          <svg width="26" height="12" style="flex-shrink:0"><line x1="0" y1="6" x2="26" y2="6" stroke="#1a3a5c" stroke-width="2.5" stroke-dasharray="5,3"/></svg>
           <span>Límite Urbano</span>
         </div>
 
@@ -194,11 +167,12 @@
             <span class="toc-arrow">▼</span>
           </div>
           <div class="toc-body">
-            <div class="toc-item"><div class="toc-swatch" style="background:#F5C842"></div><span class="toc-label">Pref. Vivienda</span></div>
-            <div class="toc-item"><div class="toc-swatch" style="background:#E05C5C"></div><span class="toc-label">Pref. Equipamiento</span></div>
-            <div class="toc-item"><div class="toc-swatch" style="background:#E8965C"></div><span class="toc-label">Pref. Equip.–Vivienda</span></div>
-            <div class="toc-item"><div class="toc-swatch" style="background:#7DB87D"></div><span class="toc-label">Zonas Especiales</span></div>
-            <div class="toc-item"><div class="toc-swatch" style="background:#C8A87A"></div><span class="toc-label">Restricción Ladera</span></div>
+            <!-- MINVU: Vivienda = amarillo, Equipamiento = rojo, Mixto = naranja, Especiales/AV = verde, Restricción = gris/café -->
+            <div class="toc-item"><div class="toc-swatch" style="background:#F7E600"></div><span>U-H — Zonas Preferentemente Vivienda</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#FF2600"></div><span>U-E, U-E1, U-E2, U-E3 — Zonas Preferentemente Equipamiento</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#FF8000"></div><span>U-EH — Zonas Preferentemente Equipamiento–Vivienda</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#38A800"></div><span>Z-AV, Z-AV-1 a Z-AV-4, Z-S1, Z-S2, Z-S6, U-Ea — Zonas Especiales</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#BEBEBE"></div><span>Z-R1, Z-R2 — Zonas de Restricción Ladera Cerro San Cristóbal</span></div>
           </div>
         </div>
 
@@ -210,11 +184,12 @@
             <span class="toc-arrow">▼</span>
           </div>
           <div class="toc-body">
-            <div class="toc-item"><div class="toc-swatch" style="background:#D94F4F"></div><span class="toc-label">Edificación Alta</span></div>
-            <div class="toc-item"><div class="toc-swatch" style="background:#E89C3A"></div><span class="toc-label">Edificación Media</span></div>
-            <div class="toc-item"><div class="toc-swatch" style="background:#F5E04A"></div><span class="toc-label">Edificación Baja</span></div>
-            <div class="toc-item"><div class="toc-swatch" style="background:#7DB87D"></div><span class="toc-label">Zonas Especiales</span></div>
-            <div class="toc-item"><div class="toc-swatch" style="background:#C8A87A"></div><span class="toc-label">Restricción Ladera</span></div>
+            <!-- MINVU: Alta = rojo oscuro, Media = naranja, Baja = amarillo claro -->
+            <div class="toc-item"><div class="toc-swatch" style="background:#CC0000"></div><span>E-A1, E-A2 — Áreas de Edificación Alta</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#FF7F00"></div><span>E-M1, E-M2, E-M3 — Áreas de Edificación Media</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#FFFF99"></div><span>E-B1, E-B2 — Áreas de Edificación Baja</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#38A800"></div><span>Z-AV, Z-AV-1 a Z-AV-4, Z-S1, Z-S2, Z-S6, U-Ea — Zonas Especiales</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#BEBEBE"></div><span>Z-R1, Z-R2 — Zonas de Restricción Ladera Cerro San Cristóbal</span></div>
           </div>
         </div>
 
@@ -226,12 +201,11 @@
             <span class="toc-arrow">▼</span>
           </div>
           <div class="toc-body">
-            <div class="toc-item"><div class="toc-swatch" style="background:#8B2FC9"></div><span class="toc-label">Monumento Nacional</span></div>
-            <div class="toc-item"><div class="toc-swatch" style="background:#A855D4"></div><span class="toc-label">Monumento Nac. Zona Típica</span></div>
-            <div class="toc-item"><div class="toc-swatch" style="background:#6B21A8"></div><span class="toc-label">Monumento Nac. Arqueológico</span></div>
-            <div class="toc-item"><div class="toc-swatch" style="background:#C084D4"></div><span class="toc-label">Zona Conservación Histórica</span></div>
-            <div class="toc-item"><div class="toc-swatch" style="background:#DDA0E8"></div><span class="toc-label">Inm. Conservación Histórica</span></div>
-            <div class="toc-item"><div class="toc-swatch" style="background:#E8C4F0"></div><span class="toc-label">Sector Especial</span></div>
+            <!-- MINVU patrimonio: Monumento = ocre/mostaza, ZCH = naranja terracota, ICH = durazno, Sector Especial = rosado -->
+            <div class="toc-item"><div class="toc-swatch" style="background:#D4AA00"></div><span>MN-6, MN-7, MN-8 — Monumento Nacional / Zona Típica / Arqueológico</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#C8622A"></div><span>ZCH-16 — Zona de Conservación Histórica</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#E8A070"></div><span>ICH-9 — Inmueble de Conservación Histórica</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#E8C880"></div><span>SE-5, SE-11 — Sector Especial</span></div>
           </div>
         </div>
 
@@ -256,17 +230,13 @@
 
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoicnVwYW5jbyIsImEiOiJjbXExMnE1Z2wxMWZ3MnFvZ3k3bXJ4ZzBlIn0.4fdlXb3-rGlAGzRofTaxBA';
-
 const GEOJSON_URL = 'https://raw.githubusercontent.com/datos-recoleta/banco-suelo/main/cartografia/inmuebles_banco_suelo.geojson';
 const CSV_URL     = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSD32rwi3Ed3sQ0w6bQQYBbATcz1QuRyYq17crO2E6lPnPMd0ZOGdT-Is4PQEzGI7gjTjkP0NjLROtA/pub?gid=1728987519&single=true&output=csv';
 const BASE_CARTO  = 'https://raw.githubusercontent.com/datos-recoleta/banco-suelo/main/cartografia/';
 
 const map = new mapboxgl.Map({
-  container: 'map',
-  style: 'mapbox://styles/mapbox/light-v11',
-  center: [-70.6406, -33.4000],
-  zoom: 13,
-  attributionControl: false
+  container: 'map', style: 'mapbox://styles/mapbox/light-v11',
+  center: [-70.6406, -33.4000], zoom: 13, attributionControl: false
 });
 map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
 map.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-right');
@@ -275,67 +245,79 @@ let sheets = {}, geojson = null;
 let popup = new mapboxgl.Popup({ closeButton: true, maxWidth: '340px', offset: 10 });
 let hoveredId = null, selectedId = null, filtroCom = '';
 
-// Grupos de capas para el toggle
 const LAYER_GROUPS = {
-  inmuebles: ['inmuebles-fill','inmuebles-border','inmuebles-hover','inmuebles-sel','inmuebles-labels'],
-  usos:  ['prc-usos-fill','prc-usos-line','prc-usos-labels'],
-  edif:  ['prc-edif-fill','prc-edif-line','prc-edif-labels'],
-  patri: ['prc-patri-fill','prc-patri-line','prc-patri-labels'],
-  'limite-urbano': ['limite-urbano-line']
+  inmuebles:     ['inmuebles-fill','inmuebles-border','inmuebles-hover','inmuebles-sel','inmuebles-labels'],
+  'limite-urbano': ['limite-urbano-line'],
+  usos:          ['prc-usos-fill','prc-usos-line','prc-usos-labels'],
+  edif:          ['prc-edif-fill','prc-edif-line','prc-edif-labels'],
+  patri:         ['prc-patri-fill','prc-patri-line','prc-patri-labels']
 };
 
-// ── TOC: toggle colapso del grupo ──
+// ── COLORES MINVU ──────────────────────────────────────────────────────────
+// Usos de suelo
+const COLOR_USOS = ['match', ['get', 'NOMBRE'],
+  'ZONAS PREFERENTEMENTE VIVIENDA',                  '#F7E600',
+  'ZONAS PREFERENTEMENTE EQUIPAMIENTO',              '#FF2600',
+  'ZONAS PREFERENTEMENTE EQUIPAMIENTO - VIVIENDA',   '#FF8000',
+  'ZONAS ESPECIALES',                                '#38A800',
+  'ZONAS DE RESTRICCIÓN LADERA CERRO SAN CRISTÓBAL', '#BEBEBE',
+  '#CCCCCC'
+];
+// Edificación
+const COLOR_EDIF = ['match', ['get', 'NOMBRE'],
+  'AREAS DE EDIFICACIÓN ALTA',                       '#CC0000',
+  'AREAS DE EDIFICACIÓN MEDIA',                      '#FF7F00',
+  'AREAS DE EDIFICACIÓN BAJA',                       '#FFFF99',
+  'ZONAS ESPECIALES',                                '#38A800',
+  'ZONAS DE RESTRICCIÓN LADERA CERRO SAN CRISTÓBAL', '#BEBEBE',
+  '#CCCCCC'
+];
+// Patrimonio — por ETIQUETA (campo más preciso)
+const COLOR_PATRI = ['match', ['get', 'CATEGORIA'],
+  'MONUMENTO NACIONAL',              '#D4AA00',
+  'MONUMENTO NACIONAL ZONA TÍPIC',   '#D4AA00',
+  'MONUMENTO NAC ARQUEOLÓGICO',      '#D4AA00',
+  'ZONA DE CONSERVACIÓN HISTÓRI',    '#C8622A',
+  'INM DE CONSERVACION HISTÓRICA',   '#E8A070',
+  'SECTOR ESPECIAL',                 '#E8C880',
+  '#CCCCCC'
+];
+
 function tocToggle(key) {
   const grp = document.getElementById('grp-' + key);
   if (grp) grp.classList.toggle('collapsed');
 }
-
-// ── TOC: activar/desactivar capas ──
 function toggleLayerGroup(key, visible) {
   const vis = visible ? 'visible' : 'none';
-  (LAYER_GROUPS[key] || []).forEach(id => {
-    if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', vis);
-  });
-  // Atenuar el header del grupo si está desactivado
+  (LAYER_GROUPS[key] || []).forEach(id => { if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', vis); });
   const grp = document.getElementById('grp-' + key);
-  if (grp) grp.style.opacity = visible ? '1' : '0.45';
-  const single = document.querySelector('.toc-single');
-  if (key === 'inmuebles' && single) single.style.opacity = visible ? '1' : '0.45';
+  if (grp) grp.style.opacity = visible ? '1' : '0.4';
 }
 
 // ── CSV parser ──
 function parseCSV(txt) {
   txt = txt.replace(/^\uFEFF/, '');
-  const filas = [];
-  let fila = [], campo = '', enComillas = false;
+  const filas = []; let fila = [], campo = '', enComillas = false;
   for (let i = 0; i < txt.length; i++) {
-    const c = txt[i], sig = txt[i + 1];
-    if (c === '"') {
-      if (enComillas && sig === '"') { campo += '"'; i++; }
-      else { enComillas = !enComillas; }
-    } else if (c === ',' && !enComillas) {
-      fila.push(campo.trim()); campo = '';
-    } else if ((c === '\n' || (c === '\r' && sig === '\n')) && !enComillas) {
+    const c = txt[i], sig = txt[i+1];
+    if (c === '"') { if (enComillas && sig === '"') { campo += '"'; i++; } else { enComillas = !enComillas; } }
+    else if (c === ',' && !enComillas) { fila.push(campo.trim()); campo = ''; }
+    else if ((c === '\n' || (c === '\r' && sig === '\n')) && !enComillas) {
       if (c === '\r') i++;
       fila.push(campo.trim()); campo = '';
-      if (fila.some(f => f !== '')) filas.push(fila);
-      fila = [];
-    } else if (c === '\r' && !enComillas) {
-    } else { campo += c; }
+      if (fila.some(f => f !== '')) filas.push(fila); fila = [];
+    } else if (c === '\r' && !enComillas) {} else { campo += c; }
   }
   if (campo || fila.length) { fila.push(campo.trim()); if (fila.some(f => f !== '')) filas.push(fila); }
   if (!filas.length) return {};
-  const headers = filas[0];
-  const out = {};
+  const headers = filas[0]; const out = {};
   for (let i = 1; i < filas.length; i++) {
     const row = filas[i], obj = {};
     headers.forEach((h, idx) => { obj[h] = (row[idx] || '').trim(); });
-    const id = obj['ID'] || '';
-    if (id) out[id] = obj;
+    const id = obj['ID'] || ''; if (id) out[id] = obj;
   }
   return out;
 }
-
 function g(fila, ...campos) {
   if (!fila) return '—';
   for (const c of campos) { const v = fila[c]; if (v !== undefined && v.trim() !== '') return v.trim(); }
@@ -343,40 +325,27 @@ function g(fila, ...campos) {
 }
 function peso(v) {
   if (!v || v === '—') return '—';
-  const n = parseInt(v.replace(/\D/g, ''));
-  return isNaN(n) ? v : '$' + n.toLocaleString('es-CL');
+  const n = parseInt(v.replace(/\D/g, '')); return isNaN(n) ? v : '$' + n.toLocaleString('es-CL');
 }
 function tieneComodato(fila) {
   if (!fila) return false;
   const c = g(fila, 'COMODATO_A');
   return c !== '—' && c.toLowerCase() !== 'no' && c.toLowerCase() !== 'sin comodato';
 }
-
 function popup_html(props, fila) {
-  const id   = props.ID || '—';
-  const rol  = props.ROL || g(fila, 'ROL SII');
-  const dir  = fila ? (g(fila,'DIRECCION') + (g(fila,'NUM_DOMICILIARIO') !== '—' ? ' ' + g(fila,'NUM_DOMICILIARIO') : '')) : id;
-  const sup  = g(fila, 'SUP_TERRENO');
-  const uso  = g(fila, 'USO_ACTUAL');
-  const est  = g(fila, 'ESTADO');
-  const av   = peso(g(fila, 'AVALUO_FISCAL_2025_2'));
-  const com  = g(fila, 'COMODATO_A');
-  const link = g(fila, 'HIPERVINCULO');
-  const img  = g(fila, 'IMAGEN');
-  const imgHTML  = img !== '—' ? `<img class="popup-img" src="${img}" onerror="this.style.display='none'" />` : '';
-  const headCls  = img !== '—' ? 'con-img' : '';
-  const linkHTML = link !== '—' ? `<a class="popup-link" href="${link}" target="_blank">Ver ficha completa →</a>` : '';
-  return `${imgHTML}
-    <div class="popup-head ${headCls}">
-      <div class="popup-pid">${id}</div>
-      <div class="popup-dir">${dir}</div>
-    </div>
+  const id=props.ID||'—', rol=props.ROL||g(fila,'ROL SII');
+  const dir=fila?(g(fila,'DIRECCION')+(g(fila,'NUM_DOMICILIARIO')!=='—'?' '+g(fila,'NUM_DOMICILIARIO'):'')):id;
+  const sup=g(fila,'SUP_TERRENO'), uso=g(fila,'USO_ACTUAL'), est=g(fila,'ESTADO');
+  const av=peso(g(fila,'AVALUO_FISCAL_2025_2')), com=g(fila,'COMODATO_A');
+  const link=g(fila,'HIPERVINCULO'), img=g(fila,'IMAGEN');
+  const imgHTML=img!=='—'?`<img class="popup-img" src="${img}" onerror="this.style.display='none'" />`:'';
+  const headCls=img!=='—'?'con-img':'';
+  const linkHTML=link!=='—'?`<a class="popup-link" href="${link}" target="_blank">Ver ficha completa →</a>`:'';
+  return `${imgHTML}<div class="popup-head ${headCls}"><div class="popup-pid">${id}</div><div class="popup-dir">${dir}</div></div>
     <div class="popup-body">
-      <div class="psec"><div class="psec-t">Identificación</div>
-        <div class="pfila"><span class="pfila-l">ROL SII</span><span class="pfila-v">${rol}</span></div>
-      </div>
+      <div class="psec"><div class="psec-t">Identificación</div><div class="pfila"><span class="pfila-l">ROL SII</span><span class="pfila-v">${rol}</span></div></div>
       <div class="psec"><div class="psec-t">Físico</div>
-        <div class="pfila"><span class="pfila-l">Sup. Terreno</span><span class="pfila-v">${sup !== '—' ? sup + ' m²' : '—'}</span></div>
+        <div class="pfila"><span class="pfila-l">Sup. Terreno</span><span class="pfila-v">${sup!=='—'?sup+' m²':'—'}</span></div>
         <div class="pfila"><span class="pfila-l">Estado</span><span class="pfila-v">${est}</span></div>
       </div>
       <div class="psec"><div class="psec-t">Gestión</div>
@@ -388,298 +357,251 @@ function popup_html(props, fila) {
       </div>
     </div>${linkHTML}`;
 }
-
 function centroFeature(f) {
-  const coords = f.geometry.coordinates[0][0];
-  let lng = 0, lat = 0;
-  coords.forEach(c => { lng += c[0]; lat += c[1]; });
-  return [lng / coords.length, lat / coords.length];
+  const coords=f.geometry.coordinates[0][0]; let lng=0,lat=0;
+  coords.forEach(c=>{lng+=c[0];lat+=c[1];}); return [lng/coords.length,lat/coords.length];
 }
-function abrirPopup(feature, lngLat) {
-  popup.setLngLat(lngLat).setHTML(popup_html(feature.properties, sheets[feature.properties.ID] || null)).addTo(map);
-}
+function abrirPopup(feature,lngLat) { popup.setLngLat(lngLat).setHTML(popup_html(feature.properties,sheets[feature.properties.ID]||null)).addTo(map); }
 function pasaFiltro(f) {
-  const fila = sheets[f.properties.ID] || null;
-  if (filtroCom === 'si') return tieneComodato(fila);
-  if (filtroCom === 'no') return !tieneComodato(fila);
+  const fila=sheets[f.properties.ID]||null;
+  if(filtroCom==='si') return tieneComodato(fila);
+  if(filtroCom==='no') return !tieneComodato(fila);
   return true;
 }
 function estadisticas(features) {
-  const vis = features.filter(pasaFiltro);
-  const com = vis.filter(f => tieneComodato(sheets[f.properties.ID] || null));
-  let sup = 0;
-  vis.forEach(f => { const fila = sheets[f.properties.ID]; if (fila) { const s = parseFloat(g(fila,'SUP_TERRENO').replace(',','.')); if (!isNaN(s)) sup += s; } });
-  document.getElementById('s-total').textContent = geojson ? geojson.features.length : '—';
-  document.getElementById('s-vis').textContent = vis.length;
-  document.getElementById('s-com').textContent = com.length;
-  document.getElementById('s-sup').textContent = sup > 0 ? Math.round(sup).toLocaleString('es-CL') : '—';
+  const vis=features.filter(pasaFiltro), com=vis.filter(f=>tieneComodato(sheets[f.properties.ID]||null));
+  let sup=0; vis.forEach(f=>{const fila=sheets[f.properties.ID];if(fila){const s=parseFloat(g(fila,'SUP_TERRENO').replace(',','.'));if(!isNaN(s))sup+=s;}});
+  document.getElementById('s-total').textContent=geojson?geojson.features.length:'—';
+  document.getElementById('s-vis').textContent=vis.length;
+  document.getElementById('s-com').textContent=com.length;
+  document.getElementById('s-sup').textContent=sup>0?Math.round(sup).toLocaleString('es-CL'):'—';
 }
 function lista(features) {
-  const el = document.getElementById('lista');
-  el.innerHTML = '';
-  const fil = features.filter(pasaFiltro);
-  document.getElementById('cnt').textContent = fil.length;
-  estadisticas(features);
-  if (!fil.length) { el.innerHTML = '<div class="sin-datos">Sin resultados</div>'; return; }
-  fil.forEach(f => {
-    const props = f.properties, fila = sheets[props.ID] || null;
-    const dir = fila ? (g(fila,'DIRECCION') + (g(fila,'NUM_DOMICILIARIO') !== '—' ? ' ' + g(fila,'NUM_DOMICILIARIO') : '')) : props.ID;
-    const div = document.createElement('div');
-    div.className = 'item'; div.dataset.id = props.ID;
-    div.innerHTML = `<div class="item-id">${props.ID}</div><div class="item-dir">${dir}</div><div class="item-rol">ROL ${props.ROL || '—'}</div>`;
-    div.addEventListener('click', () => {
-      document.querySelectorAll('.item').forEach(i => i.classList.remove('activo'));
-      div.classList.add('activo');
-      const centro = centroFeature(f);
-      map.flyTo({ center: centro, zoom: 17, duration: 800 });
-      abrirPopup(f, centro);
-      marcarSeleccionado(f.id);
-    });
-    el.appendChild(div);
+  const el=document.getElementById('lista'); el.innerHTML='';
+  const fil=features.filter(pasaFiltro);
+  document.getElementById('cnt').textContent=fil.length; estadisticas(features);
+  if(!fil.length){el.innerHTML='<div class="sin-datos">Sin resultados</div>';return;}
+  fil.forEach(f=>{
+    const props=f.properties, fila=sheets[props.ID]||null;
+    const dir=fila?(g(fila,'DIRECCION')+(g(fila,'NUM_DOMICILIARIO')!=='—'?' '+g(fila,'NUM_DOMICILIARIO'):'')):props.ID;
+    const div=document.createElement('div'); div.className='item'; div.dataset.id=props.ID;
+    div.innerHTML=`<div class="item-id">${props.ID}</div><div class="item-dir">${dir}</div><div class="item-rol">ROL ${props.ROL||'—'}</div>`;
+    div.addEventListener('click',()=>{
+      document.querySelectorAll('.item').forEach(i=>i.classList.remove('activo')); div.classList.add('activo');
+      const centro=centroFeature(f); map.flyTo({center:centro,zoom:17,duration:800});
+      abrirPopup(f,centro); marcarSeleccionado(f.id);
+    }); el.appendChild(div);
   });
 }
 function marcarSeleccionado(id) {
-  if (selectedId !== null) { try { map.setFeatureState({ source: 'inmuebles', id: selectedId }, { selected: false }); } catch(e) {} }
-  selectedId = id;
-  if (selectedId !== undefined && selectedId !== null) { try { map.setFeatureState({ source: 'inmuebles', id: selectedId }, { selected: true }); } catch(e) {} }
+  if(selectedId!==null){try{map.setFeatureState({source:'inmuebles',id:selectedId},{selected:false});}catch(e){}}
+  selectedId=id;
+  if(selectedId!==undefined&&selectedId!==null){try{map.setFeatureState({source:'inmuebles',id:selectedId},{selected:true});}catch(e){}}
 }
 
-// ── CAPAS PRC ──────────────────────────────────────────────────────────────
+// ── CONFIGURACIÓN ETIQUETAS (común para las 3 capas PRC) ──
+const LABEL_LAYOUT_USOS = {
+  'text-field': ['concat', ['get','ZONA'], '\n', ['get','NOMBRE']],
+  'text-font': ['DIN Offc Pro Medium','Arial Unicode MS Regular'],
+  'text-size': ['interpolate',['linear'],['zoom'], 13,9, 15,11, 17,13],
+  'text-anchor': 'center',
+  'text-max-width': 8,
+  'text-allow-overlap': false,
+  'text-ignore-placement': false,
+  'symbol-placement': 'point'
+};
+const LABEL_LAYOUT_PATRI = {
+  'text-field': ['concat', ['get','ETIQUETA'], '\n', ['get','NOMBRE']],
+  'text-font': ['DIN Offc Pro Medium','Arial Unicode MS Regular'],
+  'text-size': ['interpolate',['linear'],['zoom'], 13,9, 15,11, 17,13],
+  'text-anchor': 'center',
+  'text-max-width': 8,
+  'text-allow-overlap': false,
+  'symbol-placement': 'point'
+};
+const LABEL_PAINT = {
+  'text-color': '#1a1a1a',
+  'text-halo-color': 'rgba(255,255,255,0.92)',
+  'text-halo-width': 1.5
+};
+
 function agregarCapasPRC() {
-  // USOS
+  // ── LÍMITE URBANO ──
+  if (!map.getSource('limite-urbano'))
+    map.addSource('limite-urbano', { type:'geojson', data: BASE_CARTO+'Limite_Urbano.geojson' });
+  if (!map.getLayer('limite-urbano-line'))
+    map.addLayer({ id:'limite-urbano-line', type:'line', source:'limite-urbano',
+      paint:{ 'line-color':'#1a3a5c','line-width':2.5,'line-opacity':0.9,'line-dasharray':[4,2] }
+    });
+
+  // ── PRC USOS ──
   if (!map.getSource('prc-usos'))
-    map.addSource('prc-usos', { type: 'geojson', data: BASE_CARTO + 'PRC_Usos.geojson' });
+    map.addSource('prc-usos', { type:'geojson', data: BASE_CARTO+'PRC_Usos.geojson' });
   if (!map.getLayer('prc-usos-fill'))
-    map.addLayer({ id: 'prc-usos-fill', type: 'fill', source: 'prc-usos', paint: {
-      'fill-color': ['match', ['get', 'NOMBRE'],
-        'ZONAS PREFERENTEMENTE VIVIENDA',                '#F5C842',
-        'ZONAS PREFERENTEMENTE EQUIPAMIENTO',            '#E05C5C',
-        'ZONAS PREFERENTEMENTE EQUIPAMIENTO - VIVIENDA', '#E8965C',
-        'ZONAS ESPECIALES',                              '#7DB87D',
-        'ZONAS DE RESTRICCIÓN LADERA CERRO SAN CRISTÓBAL','#C8A87A',
-        '#CCCCCC'],
-      'fill-opacity': 0.50
-    }}, 'inmuebles-fill');
+    map.addLayer({ id:'prc-usos-fill', type:'fill', source:'prc-usos',
+      paint:{ 'fill-color': COLOR_USOS, 'fill-opacity':0.50 }
+    }, 'inmuebles-fill');
   if (!map.getLayer('prc-usos-line'))
-    map.addLayer({ id: 'prc-usos-line', type: 'line', source: 'prc-usos',
-      paint: { 'line-color': '#999', 'line-width': 0.6, 'line-opacity': 0.7 }
+    map.addLayer({ id:'prc-usos-line', type:'line', source:'prc-usos',
+      paint:{ 'line-color':'#555','line-width':0.6,'line-opacity':0.7 }
     }, 'inmuebles-fill');
   if (!map.getLayer('prc-usos-labels'))
-    map.addLayer({ id: 'prc-usos-labels', type: 'symbol', source: 'prc-usos', layout: {
-      'text-field': ['get', 'ZONA'],
-      'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Regular'],
-      'text-size': ['interpolate', ['linear'], ['zoom'], 13, 9, 16, 13],
-      'text-anchor': 'center',
-      'text-allow-overlap': false,
-      'text-ignore-placement': false
-    }, paint: {
-      'text-color': '#333',
-      'text-halo-color': 'rgba(255,255,255,0.85)',
-      'text-halo-width': 1.5
-    }});
+    map.addLayer({ id:'prc-usos-labels', type:'symbol', source:'prc-usos',
+      layout: LABEL_LAYOUT_USOS, paint: LABEL_PAINT
+    });
 
-  // EDIFICACIÓN
+  // ── PRC EDIFICACIÓN ──
   if (!map.getSource('prc-edif'))
-    map.addSource('prc-edif', { type: 'geojson', data: BASE_CARTO + 'PRC_Edificacion.geojson' });
+    map.addSource('prc-edif', { type:'geojson', data: BASE_CARTO+'PRC_Edificacion.geojson' });
   if (!map.getLayer('prc-edif-fill'))
-    map.addLayer({ id: 'prc-edif-fill', type: 'fill', source: 'prc-edif', paint: {
-      'fill-color': ['match', ['get', 'NOMBRE'],
-        'AREAS DE EDIFICACIÓN ALTA',                     '#D94F4F',
-        'AREAS DE EDIFICACIÓN MEDIA',                    '#E89C3A',
-        'AREAS DE EDIFICACIÓN BAJA',                     '#F5E04A',
-        'ZONAS ESPECIALES',                              '#7DB87D',
-        'ZONAS DE RESTRICCIÓN LADERA CERRO SAN CRISTÓBAL','#C8A87A',
-        '#CCCCCC'],
-      'fill-opacity': 0.50
-    }}, 'inmuebles-fill');
+    map.addLayer({ id:'prc-edif-fill', type:'fill', source:'prc-edif',
+      paint:{ 'fill-color': COLOR_EDIF, 'fill-opacity':0.50 }
+    }, 'inmuebles-fill');
   if (!map.getLayer('prc-edif-line'))
-    map.addLayer({ id: 'prc-edif-line', type: 'line', source: 'prc-edif',
-      paint: { 'line-color': '#999', 'line-width': 0.6, 'line-opacity': 0.7 }
+    map.addLayer({ id:'prc-edif-line', type:'line', source:'prc-edif',
+      paint:{ 'line-color':'#555','line-width':0.6,'line-opacity':0.7 }
     }, 'inmuebles-fill');
   if (!map.getLayer('prc-edif-labels'))
-    map.addLayer({ id: 'prc-edif-labels', type: 'symbol', source: 'prc-edif', layout: {
-      'text-field': ['get', 'ZONA'],
-      'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Regular'],
-      'text-size': ['interpolate', ['linear'], ['zoom'], 13, 9, 16, 13],
-      'text-anchor': 'center',
-      'text-allow-overlap': false
-    }, paint: {
-      'text-color': '#333',
-      'text-halo-color': 'rgba(255,255,255,0.85)',
-      'text-halo-width': 1.5
-    }});
+    map.addLayer({ id:'prc-edif-labels', type:'symbol', source:'prc-edif',
+      layout: { ...LABEL_LAYOUT_USOS, 'text-field': ['concat', ['get','ZONA'], '\n', ['get','NOMBRE']] },
+      paint: LABEL_PAINT
+    });
 
-  // LÍMITE URBANO
-  if (!map.getSource('limite-urbano'))
-    map.addSource('limite-urbano', { type: 'geojson', data: BASE_CARTO + 'Limite_Urbano.geojson' });
-  if (!map.getLayer('limite-urbano-line'))
-    map.addLayer({ id: 'limite-urbano-line', type: 'line', source: 'limite-urbano', paint: {
-      'line-color': '#1a3a5c',
-      'line-width': 2.5,
-      'line-opacity': 0.9,
-      'line-dasharray': [4, 2]
-    }});
-
-  // PATRIMONIO
+  // ── PRC PATRIMONIO ──
   if (!map.getSource('prc-patri'))
-    map.addSource('prc-patri', { type: 'geojson', data: BASE_CARTO + 'PRC_Patrimonio.geojson' });
+    map.addSource('prc-patri', { type:'geojson', data: BASE_CARTO+'PRC_Patrimonio.geojson' });
   if (!map.getLayer('prc-patri-fill'))
-    map.addLayer({ id: 'prc-patri-fill', type: 'fill', source: 'prc-patri', paint: {
-      'fill-color': ['match', ['get', 'CATEGORIA'],
-        'MONUMENTO NACIONAL',            '#8B2FC9',
-        'MONUMENTO NACIONAL ZONA TÍPIC', '#A855D4',
-        'MONUMENTO NAC ARQUEOLÓGICO',    '#6B21A8',
-        'ZONA DE CONSERVACIÓN HISTÓRI',  '#C084D4',
-        'INM DE CONSERVACION HISTÓRICA', '#DDA0E8',
-        'SECTOR ESPECIAL',               '#E8C4F0',
-        '#CCCCCC'],
-      'fill-opacity': 0.60
-    }}, 'inmuebles-fill');
+    map.addLayer({ id:'prc-patri-fill', type:'fill', source:'prc-patri',
+      paint:{ 'fill-color': COLOR_PATRI, 'fill-opacity':0.65 }
+    }, 'inmuebles-fill');
   if (!map.getLayer('prc-patri-line'))
-    map.addLayer({ id: 'prc-patri-line', type: 'line', source: 'prc-patri',
-      paint: { 'line-color': '#6B21A8', 'line-width': 1.0, 'line-opacity': 0.8 }
+    map.addLayer({ id:'prc-patri-line', type:'line', source:'prc-patri',
+      paint:{ 'line-color':'#8B5500','line-width':1.0,'line-opacity':0.85 }
     }, 'inmuebles-fill');
   if (!map.getLayer('prc-patri-labels'))
-    map.addLayer({ id: 'prc-patri-labels', type: 'symbol', source: 'prc-patri', layout: {
-      'text-field': ['get', 'ZONA'],
-      'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Regular'],
-      'text-size': ['interpolate', ['linear'], ['zoom'], 13, 9, 16, 13],
-      'text-anchor': 'center',
-      'text-allow-overlap': false
-    }, paint: {
-      'text-color': '#4a0080',
-      'text-halo-color': 'rgba(255,255,255,0.9)',
-      'text-halo-width': 1.5
-    }});
+    map.addLayer({ id:'prc-patri-labels', type:'symbol', source:'prc-patri',
+      layout: LABEL_LAYOUT_PATRI, paint: { ...LABEL_PAINT, 'text-color':'#5C3A00' }
+    });
 
-  // Popups PRC
-  map.on('click', 'prc-usos-fill', e => {
-    if (!e.features[0]) return;
-    const p = e.features[0].properties;
+  // ── POPUPS PRC ──
+  map.on('click','prc-usos-fill', e => {
+    if(!e.features[0]) return;
+    const p=e.features[0].properties;
     popup.setLngLat(e.lngLat).setHTML(`
-      <div class="popup-prc-head" style="background:#b87333;">
-        <div class="popup-pid">PRC – Usos de Suelo · <b>${p.ZONA || ''}</b></div>
-        <div class="popup-dir">${p.NOMBRE || '—'}</div>
+      <div class="popup-prc-head" style="background:#8B7000;">
+        <div class="popup-pid">PRC – Usos de Suelo</div>
+        <div class="popup-dir">${p.ZONA||'—'} — ${p.NOMBRE||'—'}</div>
       </div>
       <div class="popup-prc-body">
-        <div class="pfila"><span class="pfila-l">Nombre zona</span><span class="pfila-v">${p.NOMBRE_ZON || '—'}</span></div>
+        <div class="pfila"><span class="pfila-l">Nombre zona</span><span class="pfila-v">${p.NOMBRE_ZON||'—'}</span></div>
       </div>`).addTo(map);
   });
-  map.on('click', 'prc-edif-fill', e => {
-    if (!e.features[0]) return;
-    const p = e.features[0].properties;
+  map.on('click','prc-edif-fill', e => {
+    if(!e.features[0]) return;
+    const p=e.features[0].properties;
     popup.setLngLat(e.lngLat).setHTML(`
-      <div class="popup-prc-head" style="background:#8B4513;">
-        <div class="popup-pid">PRC – Edificación · <b>${p.ZONA || ''}</b></div>
-        <div class="popup-dir">${p.NOMBRE || '—'}</div>
+      <div class="popup-prc-head" style="background:#8B3000;">
+        <div class="popup-pid">PRC – Edificación</div>
+        <div class="popup-dir">${p.ZONA||'—'} — ${p.NOMBRE||'—'}</div>
       </div>
       <div class="popup-prc-body">
-        <div class="pfila"><span class="pfila-l">Nombre zona</span><span class="pfila-v">${p.NOMBRE_ZON || '—'}</span></div>
+        <div class="pfila"><span class="pfila-l">Nombre zona</span><span class="pfila-v">${p.NOMBRE_ZON||'—'}</span></div>
       </div>`).addTo(map);
   });
-  map.on('click', 'prc-patri-fill', e => {
-    if (!e.features[0]) return;
-    const p = e.features[0].properties;
+  map.on('click','prc-patri-fill', e => {
+    if(!e.features[0]) return;
+    const p=e.features[0].properties;
     popup.setLngLat(e.lngLat).setHTML(`
-      <div class="popup-prc-head" style="background:#6B21A8;">
-        <div class="popup-pid">PRC – Patrimonio · <b>${p.ZONA || ''}</b></div>
-        <div class="popup-dir">${p.NOMBRE || '—'}</div>
+      <div class="popup-prc-head" style="background:#8B5500;">
+        <div class="popup-pid">PRC – Patrimonio · ${p.ETIQUETA||p.ZONA||'—'}</div>
+        <div class="popup-dir">${p.NOMBRE||'—'}</div>
       </div>
       <div class="popup-prc-body">
-        <div class="pfila"><span class="pfila-l">Categoría</span><span class="pfila-v">${p.CATEGORIA || '—'}</span></div>
-        <div class="pfila"><span class="pfila-l">Dirección</span><span class="pfila-v">${p.DIRECCION || '—'}</span></div>
+        <div class="pfila"><span class="pfila-l">Categoría</span><span class="pfila-v">${p.CATEGORIA||'—'}</span></div>
+        <div class="pfila"><span class="pfila-l">Dirección</span><span class="pfila-v">${p.DIRECCION||'—'}</span></div>
+        <div class="pfila"><span class="pfila-l">Zona</span><span class="pfila-v">${p.ZONA||'—'}</span></div>
       </div>`).addTo(map);
   });
-  ['prc-usos-fill','prc-edif-fill','prc-patri-fill'].forEach(id => {
-    map.on('mouseenter', id, () => map.getCanvas().style.cursor = 'pointer');
-    map.on('mouseleave', id, () => map.getCanvas().style.cursor = '');
+  ['prc-usos-fill','prc-edif-fill','prc-patri-fill'].forEach(id=>{
+    map.on('mouseenter',id,()=>map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave',id,()=>map.getCanvas().style.cursor='');
   });
 }
 
 function agregarCapas() {
   if (!map.getSource('inmuebles')) {
-    geojson.features.forEach((f, i) => { f.id = i; });
-    map.addSource('inmuebles', { type: 'geojson', data: geojson });
+    geojson.features.forEach((f,i)=>{f.id=i;});
+    map.addSource('inmuebles',{type:'geojson',data:geojson});
   }
   if (!map.getLayer('inmuebles-fill'))
-    map.addLayer({ id: 'inmuebles-fill', type: 'fill', source: 'inmuebles', paint: { 'fill-color': '#7b2d8b', 'fill-opacity': 0.5 } });
+    map.addLayer({id:'inmuebles-fill',type:'fill',source:'inmuebles',paint:{'fill-color':'#7b2d8b','fill-opacity':0.5}});
   if (!map.getLayer('inmuebles-border'))
-    map.addLayer({ id: 'inmuebles-border', type: 'line', source: 'inmuebles', paint: { 'line-color': '#5a1a6b', 'line-width': 1.5 } });
+    map.addLayer({id:'inmuebles-border',type:'line',source:'inmuebles',paint:{'line-color':'#5a1a6b','line-width':1.5}});
   if (!map.getLayer('inmuebles-hover'))
-    map.addLayer({ id: 'inmuebles-hover', type: 'fill', source: 'inmuebles', paint: { 'fill-color': '#e8640a', 'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.5, 0] } });
+    map.addLayer({id:'inmuebles-hover',type:'fill',source:'inmuebles',paint:{'fill-color':'#e8640a','fill-opacity':['case',['boolean',['feature-state','hover'],false],0.5,0]}});
   if (!map.getLayer('inmuebles-sel'))
-    map.addLayer({ id: 'inmuebles-sel', type: 'line', source: 'inmuebles', paint: { 'line-color': '#ff6600', 'line-width': ['case', ['boolean', ['feature-state', 'selected'], false], 4, 0] } });
+    map.addLayer({id:'inmuebles-sel',type:'line',source:'inmuebles',paint:{'line-color':'#ff6600','line-width':['case',['boolean',['feature-state','selected'],false],4,0]}});
   if (!map.getLayer('inmuebles-labels'))
-    map.addLayer({ id: 'inmuebles-labels', type: 'symbol', source: 'inmuebles', layout: {
-      'text-field': ['get', 'ID'],
-      'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Regular'],
-      'text-size': 10, 'text-anchor': 'center', 'text-allow-overlap': false
-    }, paint: { 'text-color': '#5a1a6b', 'text-halo-color': 'rgba(255,255,255,0.9)', 'text-halo-width': 1.5 }});
-
+    map.addLayer({id:'inmuebles-labels',type:'symbol',source:'inmuebles',
+      layout:{'text-field':['get','ID'],'text-font':['DIN Offc Pro Medium','Arial Unicode MS Regular'],'text-size':10,'text-anchor':'center','text-allow-overlap':false},
+      paint:{'text-color':'#5a1a6b','text-halo-color':'rgba(255,255,255,0.9)','text-halo-width':1.5}});
   agregarCapasPRC();
 }
 
 function cambiarMapa(estilo, btn) {
-  map.setStyle('mapbox://styles/mapbox/' + estilo);
-  document.querySelectorAll('.mb-btn').forEach(b => b.classList.remove('activo'));
+  map.setStyle('mapbox://styles/mapbox/'+estilo);
+  document.querySelectorAll('.mb-btn').forEach(b=>b.classList.remove('activo'));
   btn.classList.add('activo');
   map.once('style.load', agregarCapas);
 }
-
 document.getElementById('buscar').addEventListener('input', e => {
-  const q = e.target.value.toLowerCase();
-  if (!geojson) return;
-  const fil = geojson.features.filter(f => {
-    const fila = sheets[f.properties.ID] || {};
-    const dir = (fila['DIRECCION'] || '') + ' ' + (fila['NUM_DOMICILIARIO'] || '');
-    return (f.properties.ID || '').toLowerCase().includes(q) || (f.properties.ROL || '').toLowerCase().includes(q) || dir.toLowerCase().includes(q);
-  });
-  lista(fil);
+  const q=e.target.value.toLowerCase(); if(!geojson) return;
+  const fil=geojson.features.filter(f=>{
+    const fila=sheets[f.properties.ID]||{};
+    const dir=(fila['DIRECCION']||'')+' '+(fila['NUM_DOMICILIARIO']||'');
+    return (f.properties.ID||'').toLowerCase().includes(q)||(f.properties.ROL||'').toLowerCase().includes(q)||dir.toLowerCase().includes(q);
+  }); lista(fil);
 });
-document.getElementById('f-comodato').addEventListener('change', e => { filtroCom = e.target.value; if (geojson) lista(geojson.features); });
+document.getElementById('f-comodato').addEventListener('change', e=>{filtroCom=e.target.value; if(geojson) lista(geojson.features);});
 
 async function cargar() {
   try {
-    const [csvRes, geoRes] = await Promise.all([fetch(CSV_URL), fetch(GEOJSON_URL)]);
-    sheets = parseCSV(await csvRes.text());
-    geojson = await geoRes.json();
-    document.getElementById('badge').textContent = geojson.features.length + ' inmuebles';
-    map.on('load', () => {
+    const [csvRes,geoRes]=await Promise.all([fetch(CSV_URL),fetch(GEOJSON_URL)]);
+    sheets=parseCSV(await csvRes.text());
+    geojson=await geoRes.json();
+    document.getElementById('badge').textContent=geojson.features.length+' inmuebles';
+    map.on('load',()=>{
       agregarCapas();
-      map.on('mousemove', 'inmuebles-fill', e => {
-        if (!e.features.length) return;
-        map.getCanvas().style.cursor = 'pointer';
-        const id = e.features[0].id;
-        if (hoveredId !== null && hoveredId !== id) { try { map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: false }); } catch(ex) {} }
-        hoveredId = id;
-        if (hoveredId !== undefined) { try { map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: true }); } catch(ex) {} }
+      map.on('mousemove','inmuebles-fill',e=>{
+        if(!e.features.length) return;
+        map.getCanvas().style.cursor='pointer';
+        const id=e.features[0].id;
+        if(hoveredId!==null&&hoveredId!==id){try{map.setFeatureState({source:'inmuebles',id:hoveredId},{hover:false});}catch(ex){}}
+        hoveredId=id;
+        if(hoveredId!==undefined){try{map.setFeatureState({source:'inmuebles',id:hoveredId},{hover:true});}catch(ex){}}
       });
-      map.on('mouseleave', 'inmuebles-fill', () => {
-        map.getCanvas().style.cursor = '';
-        if (hoveredId !== null) { try { map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: false }); } catch(ex) {} }
-        hoveredId = null;
+      map.on('mouseleave','inmuebles-fill',()=>{
+        map.getCanvas().style.cursor='';
+        if(hoveredId!==null){try{map.setFeatureState({source:'inmuebles',id:hoveredId},{hover:false});}catch(ex){}}
+        hoveredId=null;
       });
-      map.on('click', 'inmuebles-fill', e => {
-        const feature = e.features[0];
-        marcarSeleccionado(feature.id);
-        abrirPopup(feature, e.lngLat);
-        const id = feature.properties.ID;
-        document.querySelectorAll('.item').forEach(i => i.classList.toggle('activo', i.dataset.id === id));
-        const el = document.querySelector(`.item[data-id="${id}"]`);
-        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      map.on('click','inmuebles-fill',e=>{
+        const feature=e.features[0]; marcarSeleccionado(feature.id); abrirPopup(feature,e.lngLat);
+        const id=feature.properties.ID;
+        document.querySelectorAll('.item').forEach(i=>i.classList.toggle('activo',i.dataset.id===id));
+        const el=document.querySelector(`.item[data-id="${id}"]`);
+        if(el) el.scrollIntoView({behavior:'smooth',block:'nearest'});
       });
       lista(geojson.features);
-      document.getElementById('loading').style.display = 'none';
+      document.getElementById('loading').style.display='none';
     });
-    if (map.loaded()) map.fire('load');
+    if(map.loaded()) map.fire('load');
   } catch(err) {
     console.error(err);
-    document.getElementById('loading').innerHTML = '<div style="color:red;padding:20px;font-family:sans-serif">Error cargando datos.</div>';
+    document.getElementById('loading').innerHTML='<div style="color:red;padding:20px;font-family:sans-serif">Error cargando datos.</div>';
   }
 }
-
 cargar();
 </script>
 </body>
 </html>
-
