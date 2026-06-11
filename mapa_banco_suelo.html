@@ -401,7 +401,7 @@ function marcarSeleccionado(id) {
 
 // ── CONFIGURACIÓN ETIQUETAS (común para las 3 capas PRC) ──
 const LABEL_LAYOUT_USOS = {
-  'text-field': ['concat', ['get','ZONA'], '\n', ['get','NOMBRE']],
+  'text-field': ['get', 'ZONA'],
   'text-font': ['DIN Offc Pro Medium','Arial Unicode MS Regular'],
   'text-size': ['interpolate',['linear'],['zoom'], 13,9, 15,11, 17,13],
   'text-anchor': 'center',
@@ -411,7 +411,7 @@ const LABEL_LAYOUT_USOS = {
   'symbol-placement': 'point'
 };
 const LABEL_LAYOUT_PATRI = {
-  'text-field': ['concat', ['get','ETIQUETA'], '\n', ['get','NOMBRE']],
+  'text-field': ['get', 'ETIQUETA'],
   'text-font': ['DIN Offc Pro Medium','Arial Unicode MS Regular'],
   'text-size': ['interpolate',['linear'],['zoom'], 13,9, 15,11, 17,13],
   'text-anchor': 'center',
@@ -463,7 +463,7 @@ function agregarCapasPRC() {
     }, 'inmuebles-fill');
   if (!map.getLayer('prc-edif-labels'))
     map.addLayer({ id:'prc-edif-labels', type:'symbol', source:'prc-edif',
-      layout: { ...LABEL_LAYOUT_USOS, 'text-field': ['concat', ['get','ZONA'], '\n', ['get','NOMBRE']] },
+      layout: { ...LABEL_LAYOUT_USOS, 'text-field': ['get', 'ZONA'] },
       paint: LABEL_PAINT
     });
 
