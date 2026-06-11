@@ -43,16 +43,34 @@
     select.filtro { width: 100%; padding: 7px 10px; border: 1.5px solid var(--gris-borde); border-radius: 6px; font-family: 'Inter', sans-serif; font-size: 12px; color: var(--texto); background: white; outline: none; margin-bottom: 8px; cursor: pointer; }
     select.filtro:last-child { margin-bottom: 0; }
 
-    .simb-item { display: flex; align-items: center; gap: 8px; font-size: 12px; margin-bottom: 6px; }
-    .simb-item:last-child { margin-bottom: 0; }
-    .simb-box { width: 16px; height: 16px; border-radius: 3px; flex-shrink: 0; }
+    /* ── TABLA DE CONTENIDOS (estilo ArcGIS) ── */
+    .toc { display: flex; flex-direction: column; gap: 2px; }
 
-    /* Toggle capas PRC */
-    .capas-toggle { display: flex; flex-direction: column; gap: 6px; }
-    .capa-btn { display: flex; align-items: center; gap: 8px; font-size: 12px; cursor: pointer; padding: 5px 8px; border-radius: 5px; border: 1.5px solid var(--gris-borde); background: white; font-family: 'Inter', sans-serif; color: var(--texto); transition: all 0.15s; }
-    .capa-btn:hover { border-color: var(--azul2); }
-    .capa-btn.oculta { opacity: 0.45; background: var(--gris-bg); }
-    .capa-dot { width: 12px; height: 12px; border-radius: 2px; flex-shrink: 0; }
+    .toc-group { border: 1px solid var(--gris-borde); border-radius: 6px; overflow: hidden; margin-bottom: 6px; }
+    .toc-group:last-child { margin-bottom: 0; }
+
+    .toc-header {
+      display: flex; align-items: center; gap: 7px;
+      padding: 7px 10px; background: var(--gris-bg);
+      cursor: pointer; user-select: none;
+      font-size: 12px; font-weight: 600; color: var(--texto);
+      border-bottom: 1px solid var(--gris-borde);
+    }
+    .toc-header:hover { background: #ebebea; }
+    .toc-header input[type=checkbox] { width: 14px; height: 14px; cursor: pointer; accent-color: var(--azul2); flex-shrink: 0; }
+    .toc-arrow { margin-left: auto; font-size: 10px; color: var(--muted); transition: transform 0.2s; }
+    .toc-group.collapsed .toc-arrow { transform: rotate(-90deg); }
+
+    .toc-body { padding: 6px 8px 8px; background: white; }
+    .toc-group.collapsed .toc-body { display: none; }
+
+    .toc-item { display: flex; align-items: center; gap: 7px; padding: 3px 2px; font-size: 11px; color: var(--texto); }
+    .toc-swatch { width: 18px; height: 14px; border-radius: 2px; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.15); }
+    .toc-label { line-height: 1.3; }
+
+    /* inmuebles dentro de toc */
+    .toc-single { display: flex; align-items: center; gap: 7px; padding: 7px 10px; font-size: 12px; font-weight: 600; color: var(--texto); background: var(--gris-bg); border-radius: 6px; border: 1px solid var(--gris-borde); margin-bottom: 6px; }
+    .toc-single input[type=checkbox] { width: 14px; height: 14px; cursor: pointer; accent-color: var(--azul2); flex-shrink: 0; }
 
     .lista-head { padding: 10px 16px 8px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--gris-borde); }
     .lista-head h2 { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
@@ -70,14 +88,12 @@
     .item-rol { font-size: 11px; color: var(--muted); margin-top: 1px; }
     .sin-datos { padding: 24px 16px; text-align: center; color: var(--muted); font-size: 13px; }
 
-    /* SELECTOR MAPA BASE */
     .mapbase { position: absolute; bottom: 32px; right: 10px; z-index: 5; display: flex; flex-direction: column; gap: 4px; }
     .mb-btn { background: white; border: 1.5px solid var(--gris-borde); border-radius: 6px; padding: 6px 10px; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600; color: var(--muted); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.12); min-width: 70px; transition: all 0.15s; }
     .mb-btn:hover { border-color: var(--azul2); color: var(--azul); }
     .mb-btn.activo { background: var(--azul); color: white; border-color: var(--azul); }
 
-    /* POPUP */
-    .mapboxgl-popup-content { background: white !important; border-radius: 8px !important; padding: 0 !important; box-shadow: 0 4px 24px rgba(0,0,0,0.18) !important; min-width: 280px; max-width: 320px; border: 1px solid var(--gris-borde) !important; }
+    .mapboxgl-popup-content { background: white !important; border-radius: 8px !important; padding: 0 !important; box-shadow: 0 4px 24px rgba(0,0,0,0.18) !important; min-width: 260px; max-width: 320px; border: 1px solid var(--gris-borde) !important; }
     .mapboxgl-popup-tip { display: none !important; }
     .mapboxgl-popup-close-button { font-size: 20px !important; color: var(--muted) !important; padding: 8px 12px !important; right: 0 !important; top: 0 !important; }
     .mapboxgl-popup-close-button:hover { background: none !important; color: var(--texto) !important; }
@@ -97,14 +113,9 @@
     .pfila-v { font-size: 12px; font-weight: 600; text-align: right; }
     .popup-link { display: block; text-align: center; padding: 9px; background: var(--azul); color: white; font-size: 12px; font-weight: 600; text-decoration: none; border-radius: 0 0 8px 8px; }
     .popup-link:hover { background: var(--azul2); }
-
-    /* popup PRC */
     .popup-prc-head { padding: 10px 36px 10px 14px; border-radius: 8px 8px 0 0; color: white; }
-    .popup-prc-body { padding: 12px 14px; font-size: 12px; }
-    .popup-prc-body .pfila-l { font-size: 11px; color: var(--muted); }
-    .popup-prc-body .pfila-v { font-size: 12px; font-weight: 600; }
+    .popup-prc-body { padding: 12px 14px; }
 
-    /* LOADING */
     #loading { position: fixed; inset: 0; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 999; gap: 14px; }
     .l-titulo { font-size: 20px; font-weight: 700; color: var(--azul); }
     .l-barra { width: 220px; height: 3px; background: var(--gris-borde); border-radius: 3px; overflow: hidden; }
@@ -156,51 +167,74 @@
       </select>
     </div>
 
-    <!-- SIMBOLOGÍA -->
-    <div class="sec">
-      <h2>Simbología cartográfica</h2>
-      <div class="simb-item">
-        <div class="simb-box" style="background:#7b2d8b;opacity:0.75;border:1.5px solid #5a1a6b"></div>
-        <span>Suelo público municipal</span>
-      </div>
+    <!-- TABLA DE CONTENIDOS -->
+    <div class="sec" style="overflow-y:auto; flex:0 0 auto;">
+      <h2>Capas</h2>
+      <div class="toc">
 
-      <!-- PRC USOS -->
-      <div style="margin-top:10px; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:6px;">PRC – Usos de Suelo</div>
-      <div class="simb-item"><div class="simb-box" style="background:#F5C842;border:1px solid #aaa"></div><span>Pref. Vivienda</span></div>
-      <div class="simb-item"><div class="simb-box" style="background:#E05C5C;border:1px solid #aaa"></div><span>Pref. Equipamiento</span></div>
-      <div class="simb-item"><div class="simb-box" style="background:#E8965C;border:1px solid #aaa"></div><span>Pref. Equip.–Vivienda</span></div>
-      <div class="simb-item"><div class="simb-box" style="background:#7DB87D;border:1px solid #aaa"></div><span>Zonas Especiales</span></div>
-      <div class="simb-item"><div class="simb-box" style="background:#C8A87A;border:1px solid #aaa"></div><span>Restricción Ladera</span></div>
-
-      <!-- PRC EDIFICACIÓN -->
-      <div style="margin-top:10px; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:6px;">PRC – Edificación</div>
-      <div class="simb-item"><div class="simb-box" style="background:#D94F4F;border:1px solid #aaa"></div><span>Edificación Alta</span></div>
-      <div class="simb-item"><div class="simb-box" style="background:#E89C3A;border:1px solid #aaa"></div><span>Edificación Media</span></div>
-      <div class="simb-item"><div class="simb-box" style="background:#F5E04A;border:1px solid #aaa"></div><span>Edificación Baja</span></div>
-
-      <!-- PRC PATRIMONIO -->
-      <div style="margin-top:10px; font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:6px;">PRC – Patrimonio</div>
-      <div class="simb-item"><div class="simb-box" style="background:#8B2FC9;border:1px solid #aaa"></div><span>Monumento Nacional</span></div>
-      <div class="simb-item"><div class="simb-box" style="background:#A855D4;border:1px solid #aaa"></div><span>Monumento Nac. Zona Típica</span></div>
-      <div class="simb-item"><div class="simb-box" style="background:#6B21A8;border:1px solid #aaa"></div><span>Monumento Nac. Arqueológico</span></div>
-      <div class="simb-item"><div class="simb-box" style="background:#C084D4;border:1px solid #aaa"></div><span>Zona Conservación Histórica</span></div>
-      <div class="simb-item"><div class="simb-box" style="background:#DDA0E8;border:1px solid #aaa"></div><span>Inm. Conservación Histórica</span></div>
-      <div class="simb-item"><div class="simb-box" style="background:#E8C4F0;border:1px solid #aaa"></div><span>Sector Especial</span></div>
-
-      <!-- TOGGLE CAPAS PRC -->
-      <div style="margin-top:12px;">
-        <div style="font-size:10px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted); margin-bottom:6px;">Capas visibles</div>
-        <div class="capas-toggle">
-          <button class="capa-btn" id="btn-usos" onclick="toggleCapa('usos')">
-            <div class="capa-dot" style="background:#F5C842;border:1px solid #aaa"></div> PRC Usos de Suelo
-          </button>
-          <button class="capa-btn" id="btn-edif" onclick="toggleCapa('edif')">
-            <div class="capa-dot" style="background:#E89C3A;border:1px solid #aaa"></div> PRC Edificación
-          </button>
-          <button class="capa-btn" id="btn-patri" onclick="toggleCapa('patri')">
-            <div class="capa-dot" style="background:#8B2FC9;border:1px solid #aaa"></div> PRC Patrimonio
-          </button>
+        <!-- Inmuebles municipales -->
+        <div class="toc-single">
+          <input type="checkbox" id="chk-inmuebles" checked onchange="toggleLayerGroup('inmuebles', this.checked)" />
+          <div style="width:18px;height:14px;border-radius:2px;background:#7b2d8b;opacity:0.85;border:1px solid #5a1a6b;flex-shrink:0"></div>
+          <span>Suelo público municipal</span>
         </div>
+
+        <!-- Límite Urbano -->
+        <div class="toc-single" id="grp-limite-urbano">
+          <input type="checkbox" id="chk-limite-urbano" checked onclick="toggleLayerGroup('limite-urbano', this.checked)" />
+          <svg width="28" height="10" style="flex-shrink:0"><line x1="0" y1="5" x2="28" y2="5" stroke="#1a3a5c" stroke-width="2.5" stroke-dasharray="5,3"/></svg>
+          <span>Límite Urbano</span>
+        </div>
+
+        <!-- PRC Usos de Suelo -->
+        <div class="toc-group" id="grp-usos">
+          <div class="toc-header" onclick="tocToggle('usos')">
+            <input type="checkbox" id="chk-usos" checked onclick="event.stopPropagation(); toggleLayerGroup('usos', this.checked)" />
+            <span>PRC – Usos de Suelo</span>
+            <span class="toc-arrow">▼</span>
+          </div>
+          <div class="toc-body">
+            <div class="toc-item"><div class="toc-swatch" style="background:#F5C842"></div><span class="toc-label">Pref. Vivienda</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#E05C5C"></div><span class="toc-label">Pref. Equipamiento</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#E8965C"></div><span class="toc-label">Pref. Equip.–Vivienda</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#7DB87D"></div><span class="toc-label">Zonas Especiales</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#C8A87A"></div><span class="toc-label">Restricción Ladera</span></div>
+          </div>
+        </div>
+
+        <!-- PRC Edificación -->
+        <div class="toc-group" id="grp-edif">
+          <div class="toc-header" onclick="tocToggle('edif')">
+            <input type="checkbox" id="chk-edif" checked onclick="event.stopPropagation(); toggleLayerGroup('edif', this.checked)" />
+            <span>PRC – Edificación</span>
+            <span class="toc-arrow">▼</span>
+          </div>
+          <div class="toc-body">
+            <div class="toc-item"><div class="toc-swatch" style="background:#D94F4F"></div><span class="toc-label">Edificación Alta</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#E89C3A"></div><span class="toc-label">Edificación Media</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#F5E04A"></div><span class="toc-label">Edificación Baja</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#7DB87D"></div><span class="toc-label">Zonas Especiales</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#C8A87A"></div><span class="toc-label">Restricción Ladera</span></div>
+          </div>
+        </div>
+
+        <!-- PRC Patrimonio -->
+        <div class="toc-group" id="grp-patri">
+          <div class="toc-header" onclick="tocToggle('patri')">
+            <input type="checkbox" id="chk-patri" checked onclick="event.stopPropagation(); toggleLayerGroup('patri', this.checked)" />
+            <span>PRC – Patrimonio</span>
+            <span class="toc-arrow">▼</span>
+          </div>
+          <div class="toc-body">
+            <div class="toc-item"><div class="toc-swatch" style="background:#8B2FC9"></div><span class="toc-label">Monumento Nacional</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#A855D4"></div><span class="toc-label">Monumento Nac. Zona Típica</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#6B21A8"></div><span class="toc-label">Monumento Nac. Arqueológico</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#C084D4"></div><span class="toc-label">Zona Conservación Histórica</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#DDA0E8"></div><span class="toc-label">Inm. Conservación Histórica</span></div>
+            <div class="toc-item"><div class="toc-swatch" style="background:#E8C4F0"></div><span class="toc-label">Sector Especial</span></div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -223,9 +257,9 @@
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoicnVwYW5jbyIsImEiOiJjbXExMnE1Z2wxMWZ3MnFvZ3k3bXJ4ZzBlIn0.4fdlXb3-rGlAGzRofTaxBA';
 
-const GEOJSON_URL   = 'https://raw.githubusercontent.com/datos-recoleta/banco-suelo/main/cartografia/inmuebles_banco_suelo.geojson';
-const CSV_URL       = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSD32rwi3Ed3sQ0w6bQQYBbATcz1QuRyYq17crO2E6lPnPMd0ZOGdT-Is4PQEzGI7gjTjkP0NjLROtA/pub?gid=1728987519&single=true&output=csv';
-const BASE_CARTO    = 'https://raw.githubusercontent.com/datos-recoleta/banco-suelo/main/cartografia/';
+const GEOJSON_URL = 'https://raw.githubusercontent.com/datos-recoleta/banco-suelo/main/cartografia/inmuebles_banco_suelo.geojson';
+const CSV_URL     = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSD32rwi3Ed3sQ0w6bQQYBbATcz1QuRyYq17crO2E6lPnPMd0ZOGdT-Is4PQEzGI7gjTjkP0NjLROtA/pub?gid=1728987519&single=true&output=csv';
+const BASE_CARTO  = 'https://raw.githubusercontent.com/datos-recoleta/banco-suelo/main/cartografia/';
 
 const map = new mapboxgl.Map({
   container: 'map',
@@ -237,17 +271,39 @@ const map = new mapboxgl.Map({
 map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
 map.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-right');
 
-let sheets = {};
-let geojson = null;
+let sheets = {}, geojson = null;
 let popup = new mapboxgl.Popup({ closeButton: true, maxWidth: '340px', offset: 10 });
-let hoveredId = null;
-let selectedId = null;
-let filtroCom = '';
+let hoveredId = null, selectedId = null, filtroCom = '';
 
-// Estado visibilidad capas PRC
-const capasState = { usos: true, edif: true, patri: true };
+// Grupos de capas para el toggle
+const LAYER_GROUPS = {
+  inmuebles: ['inmuebles-fill','inmuebles-border','inmuebles-hover','inmuebles-sel','inmuebles-labels'],
+  usos:  ['prc-usos-fill','prc-usos-line','prc-usos-labels'],
+  edif:  ['prc-edif-fill','prc-edif-line','prc-edif-labels'],
+  patri: ['prc-patri-fill','prc-patri-line','prc-patri-labels'],
+  'limite-urbano': ['limite-urbano-line']
+};
 
-// ── CSV parser robusto ──
+// ── TOC: toggle colapso del grupo ──
+function tocToggle(key) {
+  const grp = document.getElementById('grp-' + key);
+  if (grp) grp.classList.toggle('collapsed');
+}
+
+// ── TOC: activar/desactivar capas ──
+function toggleLayerGroup(key, visible) {
+  const vis = visible ? 'visible' : 'none';
+  (LAYER_GROUPS[key] || []).forEach(id => {
+    if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', vis);
+  });
+  // Atenuar el header del grupo si está desactivado
+  const grp = document.getElementById('grp-' + key);
+  if (grp) grp.style.opacity = visible ? '1' : '0.45';
+  const single = document.querySelector('.toc-single');
+  if (key === 'inmuebles' && single) single.style.opacity = visible ? '1' : '0.45';
+}
+
+// ── CSV parser ──
 function parseCSV(txt) {
   txt = txt.replace(/^\uFEFF/, '');
   const filas = [];
@@ -268,7 +324,7 @@ function parseCSV(txt) {
     } else { campo += c; }
   }
   if (campo || fila.length) { fila.push(campo.trim()); if (fila.some(f => f !== '')) filas.push(fila); }
-  if (filas.length === 0) return {};
+  if (!filas.length) return {};
   const headers = filas[0];
   const out = {};
   for (let i = 1; i < filas.length; i++) {
@@ -285,13 +341,11 @@ function g(fila, ...campos) {
   for (const c of campos) { const v = fila[c]; if (v !== undefined && v.trim() !== '') return v.trim(); }
   return '—';
 }
-
 function peso(v) {
   if (!v || v === '—') return '—';
   const n = parseInt(v.replace(/\D/g, ''));
   return isNaN(n) ? v : '$' + n.toLocaleString('es-CL');
 }
-
 function tieneComodato(fila) {
   if (!fila) return false;
   const c = g(fila, 'COMODATO_A');
@@ -309,35 +363,30 @@ function popup_html(props, fila) {
   const com  = g(fila, 'COMODATO_A');
   const link = g(fila, 'HIPERVINCULO');
   const img  = g(fila, 'IMAGEN');
-  const imgHTML  = (img !== '—') ? `<img class="popup-img" src="${img}" onerror="this.style.display='none'" />` : '';
+  const imgHTML  = img !== '—' ? `<img class="popup-img" src="${img}" onerror="this.style.display='none'" />` : '';
   const headCls  = img !== '—' ? 'con-img' : '';
-  const linkHTML = (link !== '—') ? `<a class="popup-link" href="${link}" target="_blank">Ver ficha completa →</a>` : '';
+  const linkHTML = link !== '—' ? `<a class="popup-link" href="${link}" target="_blank">Ver ficha completa →</a>` : '';
   return `${imgHTML}
     <div class="popup-head ${headCls}">
       <div class="popup-pid">${id}</div>
       <div class="popup-dir">${dir}</div>
     </div>
     <div class="popup-body">
-      <div class="psec">
-        <div class="psec-t">Identificación</div>
+      <div class="psec"><div class="psec-t">Identificación</div>
         <div class="pfila"><span class="pfila-l">ROL SII</span><span class="pfila-v">${rol}</span></div>
       </div>
-      <div class="psec">
-        <div class="psec-t">Físico</div>
+      <div class="psec"><div class="psec-t">Físico</div>
         <div class="pfila"><span class="pfila-l">Sup. Terreno</span><span class="pfila-v">${sup !== '—' ? sup + ' m²' : '—'}</span></div>
         <div class="pfila"><span class="pfila-l">Estado</span><span class="pfila-v">${est}</span></div>
       </div>
-      <div class="psec">
-        <div class="psec-t">Gestión</div>
+      <div class="psec"><div class="psec-t">Gestión</div>
         <div class="pfila"><span class="pfila-l">Uso actual</span><span class="pfila-v">${uso}</span></div>
         <div class="pfila"><span class="pfila-l">Comodato a</span><span class="pfila-v">${com}</span></div>
       </div>
-      <div class="psec">
-        <div class="psec-t">Valorización</div>
+      <div class="psec"><div class="psec-t">Valorización</div>
         <div class="pfila"><span class="pfila-l">Avalúo fiscal 2S 2025</span><span class="pfila-v">${av}</span></div>
       </div>
-    </div>
-    ${linkHTML}`;
+    </div>${linkHTML}`;
 }
 
 function centroFeature(f) {
@@ -346,33 +395,25 @@ function centroFeature(f) {
   coords.forEach(c => { lng += c[0]; lat += c[1]; });
   return [lng / coords.length, lat / coords.length];
 }
-
 function abrirPopup(feature, lngLat) {
-  const fila = sheets[feature.properties.ID] || null;
-  popup.setLngLat(lngLat).setHTML(popup_html(feature.properties, fila)).addTo(map);
+  popup.setLngLat(lngLat).setHTML(popup_html(feature.properties, sheets[feature.properties.ID] || null)).addTo(map);
 }
-
 function pasaFiltro(f) {
   const fila = sheets[f.properties.ID] || null;
   if (filtroCom === 'si') return tieneComodato(fila);
   if (filtroCom === 'no') return !tieneComodato(fila);
   return true;
 }
-
 function estadisticas(features) {
   const vis = features.filter(pasaFiltro);
   const com = vis.filter(f => tieneComodato(sheets[f.properties.ID] || null));
   let sup = 0;
-  vis.forEach(f => {
-    const fila = sheets[f.properties.ID];
-    if (fila) { const s = parseFloat(g(fila,'SUP_TERRENO').replace(',','.')); if (!isNaN(s)) sup += s; }
-  });
+  vis.forEach(f => { const fila = sheets[f.properties.ID]; if (fila) { const s = parseFloat(g(fila,'SUP_TERRENO').replace(',','.')); if (!isNaN(s)) sup += s; } });
   document.getElementById('s-total').textContent = geojson ? geojson.features.length : '—';
   document.getElementById('s-vis').textContent = vis.length;
   document.getElementById('s-com').textContent = com.length;
   document.getElementById('s-sup').textContent = sup > 0 ? Math.round(sup).toLocaleString('es-CL') : '—';
 }
-
 function lista(features) {
   const el = document.getElementById('lista');
   el.innerHTML = '';
@@ -381,12 +422,10 @@ function lista(features) {
   estadisticas(features);
   if (!fil.length) { el.innerHTML = '<div class="sin-datos">Sin resultados</div>'; return; }
   fil.forEach(f => {
-    const props = f.properties;
-    const fila  = sheets[props.ID] || null;
-    const dir   = fila ? (g(fila,'DIRECCION') + (g(fila,'NUM_DOMICILIARIO') !== '—' ? ' ' + g(fila,'NUM_DOMICILIARIO') : '')) : props.ID;
+    const props = f.properties, fila = sheets[props.ID] || null;
+    const dir = fila ? (g(fila,'DIRECCION') + (g(fila,'NUM_DOMICILIARIO') !== '—' ? ' ' + g(fila,'NUM_DOMICILIARIO') : '')) : props.ID;
     const div = document.createElement('div');
-    div.className = 'item';
-    div.dataset.id = props.ID;
+    div.className = 'item'; div.dataset.id = props.ID;
     div.innerHTML = `<div class="item-id">${props.ID}</div><div class="item-dir">${dir}</div><div class="item-rol">ROL ${props.ROL || '—'}</div>`;
     div.addEventListener('click', () => {
       document.querySelectorAll('.item').forEach(i => i.classList.remove('activo'));
@@ -399,159 +438,162 @@ function lista(features) {
     el.appendChild(div);
   });
 }
-
 function marcarSeleccionado(id) {
   if (selectedId !== null) { try { map.setFeatureState({ source: 'inmuebles', id: selectedId }, { selected: false }); } catch(e) {} }
   selectedId = id;
   if (selectedId !== undefined && selectedId !== null) { try { map.setFeatureState({ source: 'inmuebles', id: selectedId }, { selected: true }); } catch(e) {} }
 }
 
-// ── CAPAS PRC ─────────────────────────────────────────────────────────────
+// ── CAPAS PRC ──────────────────────────────────────────────────────────────
 function agregarCapasPRC() {
-  // PRC USOS DE SUELO
-  if (!map.getSource('prc-usos')) {
+  // USOS
+  if (!map.getSource('prc-usos'))
     map.addSource('prc-usos', { type: 'geojson', data: BASE_CARTO + 'PRC_Usos.geojson' });
-  }
-  if (!map.getLayer('prc-usos-fill')) {
-    map.addLayer({
-      id: 'prc-usos-fill', type: 'fill', source: 'prc-usos',
-      paint: {
-        'fill-color': ['match', ['get', 'NOMBRE'],
-          'ZONAS PREFERENTEMENTE VIVIENDA',                 '#F5C842',
-          'ZONAS PREFERENTEMENTE EQUIPAMIENTO',             '#E05C5C',
-          'ZONAS PREFERENTEMENTE EQUIPAMIENTO - VIVIENDA',  '#E8965C',
-          'ZONAS ESPECIALES',                               '#7DB87D',
-          'ZONAS DE RESTRICCIÓN LADERA CERRO SAN CRISTÓBAL','#C8A87A',
-          '#CCCCCC'],
-        'fill-opacity': 0.50
-      }
-    }, 'inmuebles-fill'); // se agrega DEBAJO de los inmuebles
-  }
-  if (!map.getLayer('prc-usos-line')) {
-    map.addLayer({
-      id: 'prc-usos-line', type: 'line', source: 'prc-usos',
-      paint: { 'line-color': '#888', 'line-width': 0.5, 'line-opacity': 0.6 }
+  if (!map.getLayer('prc-usos-fill'))
+    map.addLayer({ id: 'prc-usos-fill', type: 'fill', source: 'prc-usos', paint: {
+      'fill-color': ['match', ['get', 'NOMBRE'],
+        'ZONAS PREFERENTEMENTE VIVIENDA',                '#F5C842',
+        'ZONAS PREFERENTEMENTE EQUIPAMIENTO',            '#E05C5C',
+        'ZONAS PREFERENTEMENTE EQUIPAMIENTO - VIVIENDA', '#E8965C',
+        'ZONAS ESPECIALES',                              '#7DB87D',
+        'ZONAS DE RESTRICCIÓN LADERA CERRO SAN CRISTÓBAL','#C8A87A',
+        '#CCCCCC'],
+      'fill-opacity': 0.50
+    }}, 'inmuebles-fill');
+  if (!map.getLayer('prc-usos-line'))
+    map.addLayer({ id: 'prc-usos-line', type: 'line', source: 'prc-usos',
+      paint: { 'line-color': '#999', 'line-width': 0.6, 'line-opacity': 0.7 }
     }, 'inmuebles-fill');
-  }
+  if (!map.getLayer('prc-usos-labels'))
+    map.addLayer({ id: 'prc-usos-labels', type: 'symbol', source: 'prc-usos', layout: {
+      'text-field': ['get', 'ZONA'],
+      'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Regular'],
+      'text-size': ['interpolate', ['linear'], ['zoom'], 13, 9, 16, 13],
+      'text-anchor': 'center',
+      'text-allow-overlap': false,
+      'text-ignore-placement': false
+    }, paint: {
+      'text-color': '#333',
+      'text-halo-color': 'rgba(255,255,255,0.85)',
+      'text-halo-width': 1.5
+    }});
 
-  // PRC EDIFICACIÓN
-  if (!map.getSource('prc-edif')) {
+  // EDIFICACIÓN
+  if (!map.getSource('prc-edif'))
     map.addSource('prc-edif', { type: 'geojson', data: BASE_CARTO + 'PRC_Edificacion.geojson' });
-  }
-  if (!map.getLayer('prc-edif-fill')) {
-    map.addLayer({
-      id: 'prc-edif-fill', type: 'fill', source: 'prc-edif',
-      paint: {
-        'fill-color': ['match', ['get', 'NOMBRE'],
-          'AREAS DE EDIFICACIÓN ALTA',                      '#D94F4F',
-          'AREAS DE EDIFICACIÓN MEDIA',                     '#E89C3A',
-          'AREAS DE EDIFICACIÓN BAJA',                      '#F5E04A',
-          'ZONAS ESPECIALES',                               '#7DB87D',
-          'ZONAS DE RESTRICCIÓN LADERA CERRO SAN CRISTÓBAL','#C8A87A',
-          '#CCCCCC'],
-        'fill-opacity': 0.50
-      }
+  if (!map.getLayer('prc-edif-fill'))
+    map.addLayer({ id: 'prc-edif-fill', type: 'fill', source: 'prc-edif', paint: {
+      'fill-color': ['match', ['get', 'NOMBRE'],
+        'AREAS DE EDIFICACIÓN ALTA',                     '#D94F4F',
+        'AREAS DE EDIFICACIÓN MEDIA',                    '#E89C3A',
+        'AREAS DE EDIFICACIÓN BAJA',                     '#F5E04A',
+        'ZONAS ESPECIALES',                              '#7DB87D',
+        'ZONAS DE RESTRICCIÓN LADERA CERRO SAN CRISTÓBAL','#C8A87A',
+        '#CCCCCC'],
+      'fill-opacity': 0.50
+    }}, 'inmuebles-fill');
+  if (!map.getLayer('prc-edif-line'))
+    map.addLayer({ id: 'prc-edif-line', type: 'line', source: 'prc-edif',
+      paint: { 'line-color': '#999', 'line-width': 0.6, 'line-opacity': 0.7 }
     }, 'inmuebles-fill');
-  }
-  if (!map.getLayer('prc-edif-line')) {
-    map.addLayer({
-      id: 'prc-edif-line', type: 'line', source: 'prc-edif',
-      paint: { 'line-color': '#888', 'line-width': 0.5, 'line-opacity': 0.6 }
-    }, 'inmuebles-fill');
-  }
+  if (!map.getLayer('prc-edif-labels'))
+    map.addLayer({ id: 'prc-edif-labels', type: 'symbol', source: 'prc-edif', layout: {
+      'text-field': ['get', 'ZONA'],
+      'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Regular'],
+      'text-size': ['interpolate', ['linear'], ['zoom'], 13, 9, 16, 13],
+      'text-anchor': 'center',
+      'text-allow-overlap': false
+    }, paint: {
+      'text-color': '#333',
+      'text-halo-color': 'rgba(255,255,255,0.85)',
+      'text-halo-width': 1.5
+    }});
 
-  // PRC PATRIMONIO
-  if (!map.getSource('prc-patri')) {
+  // LÍMITE URBANO
+  if (!map.getSource('limite-urbano'))
+    map.addSource('limite-urbano', { type: 'geojson', data: BASE_CARTO + 'Limite_Urbano.geojson' });
+  if (!map.getLayer('limite-urbano-line'))
+    map.addLayer({ id: 'limite-urbano-line', type: 'line', source: 'limite-urbano', paint: {
+      'line-color': '#1a3a5c',
+      'line-width': 2.5,
+      'line-opacity': 0.9,
+      'line-dasharray': [4, 2]
+    }});
+
+  // PATRIMONIO
+  if (!map.getSource('prc-patri'))
     map.addSource('prc-patri', { type: 'geojson', data: BASE_CARTO + 'PRC_Patrimonio.geojson' });
-  }
-  if (!map.getLayer('prc-patri-fill')) {
-    map.addLayer({
-      id: 'prc-patri-fill', type: 'fill', source: 'prc-patri',
-      paint: {
-        'fill-color': ['match', ['get', 'CATEGORIA'],
-          'MONUMENTO NACIONAL',             '#8B2FC9',
-          'MONUMENTO NACIONAL ZONA TÍPIC',  '#A855D4',
-          'MONUMENTO NAC ARQUEOLÓGICO',     '#6B21A8',
-          'ZONA DE CONSERVACIÓN HISTÓRI',   '#C084D4',
-          'INM DE CONSERVACION HISTÓRICA',  '#DDA0E8',
-          'SECTOR ESPECIAL',                '#E8C4F0',
-          '#CCCCCC'],
-        'fill-opacity': 0.60
-      }
-    }, 'inmuebles-fill');
-  }
-  if (!map.getLayer('prc-patri-line')) {
-    map.addLayer({
-      id: 'prc-patri-line', type: 'line', source: 'prc-patri',
+  if (!map.getLayer('prc-patri-fill'))
+    map.addLayer({ id: 'prc-patri-fill', type: 'fill', source: 'prc-patri', paint: {
+      'fill-color': ['match', ['get', 'CATEGORIA'],
+        'MONUMENTO NACIONAL',            '#8B2FC9',
+        'MONUMENTO NACIONAL ZONA TÍPIC', '#A855D4',
+        'MONUMENTO NAC ARQUEOLÓGICO',    '#6B21A8',
+        'ZONA DE CONSERVACIÓN HISTÓRI',  '#C084D4',
+        'INM DE CONSERVACION HISTÓRICA', '#DDA0E8',
+        'SECTOR ESPECIAL',               '#E8C4F0',
+        '#CCCCCC'],
+      'fill-opacity': 0.60
+    }}, 'inmuebles-fill');
+  if (!map.getLayer('prc-patri-line'))
+    map.addLayer({ id: 'prc-patri-line', type: 'line', source: 'prc-patri',
       paint: { 'line-color': '#6B21A8', 'line-width': 1.0, 'line-opacity': 0.8 }
     }, 'inmuebles-fill');
-  }
+  if (!map.getLayer('prc-patri-labels'))
+    map.addLayer({ id: 'prc-patri-labels', type: 'symbol', source: 'prc-patri', layout: {
+      'text-field': ['get', 'ZONA'],
+      'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Regular'],
+      'text-size': ['interpolate', ['linear'], ['zoom'], 13, 9, 16, 13],
+      'text-anchor': 'center',
+      'text-allow-overlap': false
+    }, paint: {
+      'text-color': '#4a0080',
+      'text-halo-color': 'rgba(255,255,255,0.9)',
+      'text-halo-width': 1.5
+    }});
 
   // Popups PRC
   map.on('click', 'prc-usos-fill', e => {
-    if (e.features[0]) {
-      const p = e.features[0].properties;
-      popup.setLngLat(e.lngLat).setHTML(`
-        <div class="popup-prc-head" style="background:#b87333;">
-          <div class="popup-pid">PRC – Usos de Suelo</div>
-          <div class="popup-dir">${p.NOMBRE || '—'}</div>
-        </div>
-        <div class="popup-prc-body">
-          <div class="pfila"><span class="pfila-l">Zona</span><span class="pfila-v">${p.ZONA || '—'}</span></div>
-          <div class="pfila"><span class="pfila-l">Nombre zona</span><span class="pfila-v">${p.NOMBRE_ZON || '—'}</span></div>
-        </div>`).addTo(map);
-    }
+    if (!e.features[0]) return;
+    const p = e.features[0].properties;
+    popup.setLngLat(e.lngLat).setHTML(`
+      <div class="popup-prc-head" style="background:#b87333;">
+        <div class="popup-pid">PRC – Usos de Suelo · <b>${p.ZONA || ''}</b></div>
+        <div class="popup-dir">${p.NOMBRE || '—'}</div>
+      </div>
+      <div class="popup-prc-body">
+        <div class="pfila"><span class="pfila-l">Nombre zona</span><span class="pfila-v">${p.NOMBRE_ZON || '—'}</span></div>
+      </div>`).addTo(map);
   });
-
   map.on('click', 'prc-edif-fill', e => {
-    if (e.features[0]) {
-      const p = e.features[0].properties;
-      popup.setLngLat(e.lngLat).setHTML(`
-        <div class="popup-prc-head" style="background:#8B4513;">
-          <div class="popup-pid">PRC – Edificación</div>
-          <div class="popup-dir">${p.NOMBRE || '—'}</div>
-        </div>
-        <div class="popup-prc-body">
-          <div class="pfila"><span class="pfila-l">Zona</span><span class="pfila-v">${p.ZONA || '—'}</span></div>
-          <div class="pfila"><span class="pfila-l">Nombre zona</span><span class="pfila-v">${p.NOMBRE_ZON || '—'}</span></div>
-        </div>`).addTo(map);
-    }
+    if (!e.features[0]) return;
+    const p = e.features[0].properties;
+    popup.setLngLat(e.lngLat).setHTML(`
+      <div class="popup-prc-head" style="background:#8B4513;">
+        <div class="popup-pid">PRC – Edificación · <b>${p.ZONA || ''}</b></div>
+        <div class="popup-dir">${p.NOMBRE || '—'}</div>
+      </div>
+      <div class="popup-prc-body">
+        <div class="pfila"><span class="pfila-l">Nombre zona</span><span class="pfila-v">${p.NOMBRE_ZON || '—'}</span></div>
+      </div>`).addTo(map);
   });
-
   map.on('click', 'prc-patri-fill', e => {
-    if (e.features[0]) {
-      const p = e.features[0].properties;
-      popup.setLngLat(e.lngLat).setHTML(`
-        <div class="popup-prc-head" style="background:#6B21A8;">
-          <div class="popup-pid">PRC – Patrimonio</div>
-          <div class="popup-dir">${p.NOMBRE || '—'}</div>
-        </div>
-        <div class="popup-prc-body">
-          <div class="pfila"><span class="pfila-l">Categoría</span><span class="pfila-v">${p.CATEGORIA || '—'}</span></div>
-          <div class="pfila"><span class="pfila-l">Dirección</span><span class="pfila-v">${p.DIRECCION || '—'}</span></div>
-          <div class="pfila"><span class="pfila-l">Zona</span><span class="pfila-v">${p.ZONA || '—'}</span></div>
-        </div>`).addTo(map);
-    }
+    if (!e.features[0]) return;
+    const p = e.features[0].properties;
+    popup.setLngLat(e.lngLat).setHTML(`
+      <div class="popup-prc-head" style="background:#6B21A8;">
+        <div class="popup-pid">PRC – Patrimonio · <b>${p.ZONA || ''}</b></div>
+        <div class="popup-dir">${p.NOMBRE || '—'}</div>
+      </div>
+      <div class="popup-prc-body">
+        <div class="pfila"><span class="pfila-l">Categoría</span><span class="pfila-v">${p.CATEGORIA || '—'}</span></div>
+        <div class="pfila"><span class="pfila-l">Dirección</span><span class="pfila-v">${p.DIRECCION || '—'}</span></div>
+      </div>`).addTo(map);
   });
-
   ['prc-usos-fill','prc-edif-fill','prc-patri-fill'].forEach(id => {
     map.on('mouseenter', id, () => map.getCanvas().style.cursor = 'pointer');
     map.on('mouseleave', id, () => map.getCanvas().style.cursor = '');
   });
-}
-
-// Toggle visibilidad capas PRC
-function toggleCapa(key) {
-  capasState[key] = !capasState[key];
-  const vis = capasState[key] ? 'visible' : 'none';
-  const capas = {
-    usos:  ['prc-usos-fill',  'prc-usos-line'],
-    edif:  ['prc-edif-fill',  'prc-edif-line'],
-    patri: ['prc-patri-fill', 'prc-patri-line']
-  };
-  capas[key].forEach(id => { if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', vis); });
-  const btn = document.getElementById('btn-' + key);
-  if (btn) btn.classList.toggle('oculta', !capasState[key]);
 }
 
 function agregarCapas() {
@@ -567,8 +609,13 @@ function agregarCapas() {
     map.addLayer({ id: 'inmuebles-hover', type: 'fill', source: 'inmuebles', paint: { 'fill-color': '#e8640a', 'fill-opacity': ['case', ['boolean', ['feature-state', 'hover'], false], 0.5, 0] } });
   if (!map.getLayer('inmuebles-sel'))
     map.addLayer({ id: 'inmuebles-sel', type: 'line', source: 'inmuebles', paint: { 'line-color': '#ff6600', 'line-width': ['case', ['boolean', ['feature-state', 'selected'], false], 4, 0] } });
+  if (!map.getLayer('inmuebles-labels'))
+    map.addLayer({ id: 'inmuebles-labels', type: 'symbol', source: 'inmuebles', layout: {
+      'text-field': ['get', 'ID'],
+      'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Regular'],
+      'text-size': 10, 'text-anchor': 'center', 'text-allow-overlap': false
+    }, paint: { 'text-color': '#5a1a6b', 'text-halo-color': 'rgba(255,255,255,0.9)', 'text-halo-width': 1.5 }});
 
-  // Agregar capas PRC encima del mapa base pero debajo de inmuebles
   agregarCapasPRC();
 }
 
@@ -585,29 +632,20 @@ document.getElementById('buscar').addEventListener('input', e => {
   const fil = geojson.features.filter(f => {
     const fila = sheets[f.properties.ID] || {};
     const dir = (fila['DIRECCION'] || '') + ' ' + (fila['NUM_DOMICILIARIO'] || '');
-    return (f.properties.ID || '').toLowerCase().includes(q) ||
-           (f.properties.ROL || '').toLowerCase().includes(q) ||
-           dir.toLowerCase().includes(q);
+    return (f.properties.ID || '').toLowerCase().includes(q) || (f.properties.ROL || '').toLowerCase().includes(q) || dir.toLowerCase().includes(q);
   });
   lista(fil);
 });
-
-document.getElementById('f-comodato').addEventListener('change', e => {
-  filtroCom = e.target.value;
-  if (geojson) lista(geojson.features);
-});
+document.getElementById('f-comodato').addEventListener('change', e => { filtroCom = e.target.value; if (geojson) lista(geojson.features); });
 
 async function cargar() {
   try {
     const [csvRes, geoRes] = await Promise.all([fetch(CSV_URL), fetch(GEOJSON_URL)]);
-    const csvTxt = await csvRes.text();
-    sheets = parseCSV(csvTxt);
+    sheets = parseCSV(await csvRes.text());
     geojson = await geoRes.json();
     document.getElementById('badge').textContent = geojson.features.length + ' inmuebles';
-
     map.on('load', () => {
       agregarCapas();
-
       map.on('mousemove', 'inmuebles-fill', e => {
         if (!e.features.length) return;
         map.getCanvas().style.cursor = 'pointer';
@@ -616,13 +654,11 @@ async function cargar() {
         hoveredId = id;
         if (hoveredId !== undefined) { try { map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: true }); } catch(ex) {} }
       });
-
       map.on('mouseleave', 'inmuebles-fill', () => {
         map.getCanvas().style.cursor = '';
         if (hoveredId !== null) { try { map.setFeatureState({ source: 'inmuebles', id: hoveredId }, { hover: false }); } catch(ex) {} }
         hoveredId = null;
       });
-
       map.on('click', 'inmuebles-fill', e => {
         const feature = e.features[0];
         marcarSeleccionado(feature.id);
@@ -632,13 +668,10 @@ async function cargar() {
         const el = document.querySelector(`.item[data-id="${id}"]`);
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       });
-
       lista(geojson.features);
       document.getElementById('loading').style.display = 'none';
     });
-
     if (map.loaded()) map.fire('load');
-
   } catch(err) {
     console.error(err);
     document.getElementById('loading').innerHTML = '<div style="color:red;padding:20px;font-family:sans-serif">Error cargando datos.</div>';
@@ -649,3 +682,4 @@ cargar();
 </script>
 </body>
 </html>
+
